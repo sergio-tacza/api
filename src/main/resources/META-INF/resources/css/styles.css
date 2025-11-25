@@ -428,7 +428,7 @@ select:focus {
     transform: translateY(-1px);
 }
 
-/* Que ocupe todo el ancho */
+/* Que ocupe  */
 .btn-full {
     width: 100%;
 }

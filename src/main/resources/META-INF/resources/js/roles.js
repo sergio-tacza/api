@@ -35,8 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // REGLAS BÁSICAS POR AHORA
     // ==========================
     //
-    // ADMIN: ve todo
-    // JEFE:  ve todo (de momento igual que ADMIN)
+    // ADMIN: ve
+    // JEFE:  ve
     // EMPLEADO:
     //   - NO ve el menú de Clientes
     //   - NO ve el menú de Servicios

@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // Cargar todo el dashboard
+    // Cargar
     cargarDashboard();
 });
 
@@ -219,7 +219,7 @@ function renderCalendar(citas) {
     const hoy = new Date();
     const hoyStr = hoy.toISOString().substring(0, 10);
 
-    // Mételo todo en la grid
+    // Mételo
     // 1) Huecos vacíos antes del día 1
     for (let i = 0; i < leadingEmpty; i++) {
         const empty = document.createElement('div');
