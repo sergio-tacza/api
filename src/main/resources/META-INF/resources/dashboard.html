@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- MENÚ SUPERIOR -->
+<div class="top-menu">
+    <!-- Citas: lo ven TODOS -->
+    <a href="citas.html" class="menu-item rol-admin rol-jefe rol-empleado">Citas</a>
+
+    <!-- Clientes: solo ADMIN y JEFE -->
+    <a href="clientes.html" class="menu-item rol-admin rol-jefe">Clientes</a>
+
+    <!-- Servicios: solo ADMIN -->
+    <a href="servicios.html" class="menu-item rol-admin">Servicios</a>
+
+    <!-- Dashboard: ADMIN y JEFE -->
+    <a href="dashboard.html" class="menu-item active rol-admin rol-jefe">Dashboard</a>
+
+    <!-- Calendario: lo ven TODOS -->
+    <a href="calendario.html" class="menu-item rol-admin rol-jefe rol-empleado">Calendario</a>
+
+    <button id="logoutBtn" class="logout-btn">Cerrar sesión</button>
+</div>
+
+<div class="container rol-admin rol-jefe">
+    <header class="header">
+        <div>
+            <h1>Dashboard TacBarber</h1>
+            <p class="subtitle">Resumen de actividad y citas</p>
+        </div>
+    </header>
+
+    <!-- TARJETAS RESUMEN -->
+    <section class="dashboard-cards">
+        <div class="dash-card">
+            <div class="dash-label">Citas hoy</div>
+            <div class="dash-value" id="citasHoy">0</div>
+        </div>
+
+        <div class="dash-card">
+            <div class="dash-label">Citas últimos 7 días</div>
+            <div class="dash-value" id="citasSemana">0</div>
+        </div>
+
+        <div class="dash-card">
+            <div class="dash-label">Clientes activos</div>
+            <div class="dash-value" id="clientesActivos">0</div>
+        </div>
+
+        <div class="dash-card">
+            <div class="dash-label">Servicios activos</div>
+            <div class="dash-value" id="serviciosActivos">0</div>
+        </div>
+
+        <div class="dash-card">
+            <div class="dash-label">Ingresos hoy (estimado)</div>
+            <div class="dash-value" id="ingresosHoy">0.00 €</div>
+        </div>
+    </section>
+
+    <!-- ESTADO CITAS DE HOY -->
+    <section style="margin-top: 24px;">
+        <h2>Estado de las citas de hoy</h2>
+
+        <table class="table small-table">
+            <thead>
+            <tr>
+                <th>Pendientes</th>
+                <th>Confirmadas</th>
+                <th>Completadas</th>
+                <th>Canceladas</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td id="citasPendientesHoy">0</td>
+                <td id="citasConfirmadasHoy">0</td>
+                <td id="citasCompletadasHoy">0</td>
+                <td id="citasCanceladasHoy">0</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ÚLTIMAS CITAS -->
+    <section style="margin-top: 28px;">
+        <h2>Últimas citas registradas</h2>
+
+        <table class="table small-table">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Cliente</th>
+                <th>Servicio</th>
+                <th>Estado</th>
+            </tr>
+            </thead>
+            <tbody id="ultimasCitasBody">
+            <!-- Rellenado por dashboard.js -->
+            </tbody>
+        </table>
+
+        <p id="ultimasCitasNoData" style="display:none;">
+            No hay citas registradas.
+        </p>
+    </section>
+</div>
+
+<script src="js/sesion.js"></script>
+<script src="js/roles.js"></script>
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>

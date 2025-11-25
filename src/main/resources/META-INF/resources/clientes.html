@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Clientes</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- MENÚ SUPERIOR, IGUAL QUE EN CITAS -->
+<div class="top-menu">
+    <a href="citas.html" class="menu-item rol-admin rol-jefe rol-empleado">Citas</a>
+    <a href="clientes.html" class="menu-item active rol-admin rol-jefe">Clientes</a>
+    <a href="servicios.html" class="menu-item rol-admin">Servicios</a>
+    <a href="dashboard.html" class="menu-item rol-admin rol-jefe">Dashboard</a>
+    <a href="calendario.html" class="menu-item rol-admin rol-jefe rol-empleado">Calendario</a>
+
+    <button id="logoutBtn" class="logout-btn">Cerrar sesión</button>
+</div>
+
+<div class="container">
+    <header class="header">
+        <div>
+            <h1>Clientes TacBarber</h1>
+            <p class="subtitle">Gestión de la base de clientes</p>
+        </div>
+
+        <button id="newClientBtn" class="btn primary">Nuevo cliente</button>
+    </header>
+
+    <!-- TABLA DE CLIENTES -->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Notas</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody id="clientsTableBody"></tbody>
+    </table>
+
+    <p id="clientsNoDataMessage" style="display:none;">
+        No hay clientes registrados.
+    </p>
+
+    <!-- FORMULARIO NUEVO / EDITAR CLIENTE (OCULTO AL INICIO) -->
+    <section id="clientFormSection" style="display:none; margin-top:20px;">
+        <h2 id="clientFormTitle">Nuevo cliente</h2>
+
+        <form id="clientForm">
+            <input type="hidden" id="clienteId">
+
+            <div class="form-group">
+                <label for="clienteNombre">Nombre</label>
+                <input type="text" id="clienteNombre" required>
+            </div>
+
+            <div class="form-group">
+                <label for="clienteApellidos">Apellidos</label>
+                <input type="text" id="clienteApellidos">
+            </div>
+
+            <div class="form-group">
+                <label for="clienteTelefono">Teléfono</label>
+                <input type="text" id="clienteTelefono" required>
+            </div>
+
+            <div class="form-group">
+                <label for="clienteEmail">Email</label>
+                <input type="email" id="clienteEmail">
+            </div>
+
+            <div class="form-group">
+                <label for="clienteNotas">Notas</label>
+                <input type="text" id="clienteNotas">
+            </div>
+
+            <button type="submit" class="btn primary">Guardar</button>
+            <button type="button" id="cancelClientEditBtn" class="btn secondary">Cancelar</button>
+        </form>
+    </section>
+</div>
+
+<!-- version para forzar recarga del JS -->
+<script src="js/sesion.js"></script>
+<script src="js/roles.js"></script>
+<script src="js/clientes.js?v=2"></script>
+</body>
+</html>

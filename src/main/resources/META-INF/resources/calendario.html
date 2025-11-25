@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendario - TacBarber</title>
+
+    <!-- FullCalendar CSS desde CDN -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css">
+
+    <!-- Tu CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- MENÚ SUPERIOR con roles -->
+<div class="top-menu">
+    <!-- Citas: lo ven todos -->
+    <a href="citas.html" class="menu-item rol-admin rol-jefe rol-empleado">Citas</a>
+
+    <!-- Clientes: solo ADMIN y JEFE -->
+    <a href="clientes.html" class="menu-item rol-admin rol-jefe">Clientes</a>
+
+    <!-- Servicios: solo ADMIN -->
+    <a href="servicios.html" class="menu-item rol-admin">Servicios</a>
+
+    <!-- Dashboard: ADMIN y JEFE -->
+    <a href="dashboard.html" class="menu-item rol-admin rol-jefe">Dashboard</a>
+
+    <!-- Calendario: lo ven todos -->
+    <a href="calendario.html" class="menu-item active rol-admin rol-jefe rol-empleado">Calendario</a>
+
+    <button id="logoutBtn" class="logout-btn">Cerrar sesión</button>
+</div>
+
+<div class="container">
+    <header class="header">
+        <div>
+            <h1>Calendario de Citas</h1>
+            <p class="subtitle">Vista mensual tipo Google Calendar</p>
+        </div>
+    </header>
+
+    <!-- Aquí se pintará el calendario -->
+    <div id="calendar" style="margin-top: 20px;"></div>
+</div>
+
+<!-- FullCalendar JS (bundle global) -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+<!-- JS comunes -->
+<script src="js/sesion.js"></script>
+<script src="js/roles.js"></script>
+
+<!-- JS del calendario -->
+<script src="js/calendario.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,442 @@
+/* ==========================
+   PALETA / VARIABLES
+   ========================== */
+:root {
+    --color-bg: #f3f4f6;        /* fondo gris clarito */
+    --color-card: #ffffff;      /* tarjetas blancas */
+    --color-border-soft: #e5e7eb;
+
+    --color-primary: #d9a441;   /* dorado */
+    --color-primary-dark: #c08920;
+
+    --color-text-main: #111827;
+    --color-text-muted: #6b7280;
+
+    --radius-card: 14px;
+    --shadow-card: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+
+/* ==========================
+   BASE
+   ========================== */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text-main);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* ==========================
+   CONTENEDOR PRINCIPAL
+   ========================== */
+.container {
+    max-width: 1100px;
+    margin: 80px auto;
+    background: var(--color-card);
+    padding: 32px;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+/* ==========================
+   MENÚ SUPERIOR
+   ========================== */
+.top-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 65px;
+    background: var(--color-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 0 40px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 100;
+}
+
+.top-menu a.menu-item {
+    color: var(--color-text-main);
+    margin: 0 20px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.top-menu a.menu-item:hover {
+    color: var(--color-primary);
+}
+
+.top-menu a.menu-item.active {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.logout-btn {
+    margin-left: auto;
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: none;
+    background: #ef4444;
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+/* ==========================
+   TITULOS
+   ========================== */
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: var(--color-primary);
+}
+
+.subtitle {
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+/* ==========================
+   BOTONES
+   ========================== */
+.btn {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn.primary {
+    background: var(--color-primary);
+    color: var(--color-card);
+    box-shadow: 0 4px 10px rgba(217, 164, 65, 0.25);
+}
+
+.btn.primary:hover {
+    background: var(--color-primary-dark);
+}
+
+.btn.secondary {
+    background: #e5e7eb;
+    color: var(--color-text-main);
+}
+
+.btn.danger {
+    background: #ef4444;
+    color: white;
+}
+
+/* ==========================
+   FORMULARIOS
+   ========================== */
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+label {
+    font-size: 14px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 9px 10px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border-soft);
+    background: white;
+    color: var(--color-text-main);
+    transition: 0.15s;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px rgba(217, 164, 65, 0.4);
+    outline: none;
+}
+
+/* ==========================
+   TABLAS
+   ========================== */
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+}
+
+.table th {
+    background: #fafafa;
+    text-align: left;
+    padding: 12px 14px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--color-border-soft);
+}
+
+.table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--color-border-soft);
+    font-size: 14px;
+}
+
+.table tr:hover {
+    background: #f9fafb;
+}
+
+/* ==========================
+   ESTADOS DE CITA
+   ========================== */
+
+.estado {
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.estado.pendiente { background: #fde047; color: #6b5000; }
+.estado.confirmada { background: #22c55e; color: white; }
+.estado.completada { background: #0ea5e9; color: white; }
+.estado.cancelada { background: #ef4444; color: white; }
+
+/* ==========================
+   CALENDARIO
+   ========================== */
+
+.calendar-section {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: var(--shadow-card);
+}
+
+.calendar-day {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 6px;
+    min-height: 60px;
+}
+
+.calendar-day.today {
+    border-color: var(--color-primary);
+    background: #fff7e6;
+}
+
+.calendar-day.has-events {
+    border-color: var(--color-primary);
+}
+
+/* ==========================
+   BOTÓN WHATSAPP
+   ========================== */
+
+.whatsapp-btn {
+    background: #25D366;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+}
+
+/* ==========================
+   DASHBOARD: TARJETAS RESUMEN
+   ========================== */
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.dash-card {
+    background: var(--color-card);
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--color-border-soft);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dash-label {
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+.dash-value {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+/* ==========================
+   DASHBOARD: LAYOUT CALENDARIO + TABLAS
+   ========================== */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 24px;
+    margin-top: 24px;
+}
+
+@media (max-width: 900px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* bloque del calendario dentro del dashboard (ya tenías .calendar-section) */
+.dashboard-calendar-block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ==========================
+   TABLAS PEQUEÑAS DEL DASHBOARD
+   ========================== */
+
+.small-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-card);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    font-size: 13px;
+}
+
+.small-table th {
+    background: #fafafa;
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--color-border-soft);
+}
+
+.small-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--color-border-soft);
+}
+
+.small-table tr:hover {
+    background: #f9fafb;
+}
+
+/* título de secciones dentro del dashboard ("Estado de las citas de hoy", etc.) */
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 18px 0 10px 0;
+    color: var(--color-text-main);
+}
+/* =========================================
+   ESTILOS PANTALLA DE LOGIN (index.html)
+   ========================================= */
+
+.login-body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--color-bg);
+}
+
+/* Centrar la tarjeta en la pantalla */
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+/* Tarjeta blanca tipo ejemplo */
+.login-card {
+    background: #ffffff;
+    border-radius: var(--radius-card);
+    padding: 32px 32px 28px;
+    box-shadow: var(--shadow-card);
+    width: 100%;
+    max-width: 380px;
+}
+
+/* Cabecera con logo TB arriba a la derecha */
+.login-card-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+}
+
+.login-logo {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--color-primary);
+    letter-spacing: 1px;
+}
+
+/* Título "Iniciar sesión" */
+.login-title {
+    margin: 0 0 20px;
+    font-size: 24px;
+    color: var(--color-text-main);
+}
+
+/* Formulario */
+.login-form .form-group {
+    margin-bottom: 16px;
+}
+
+.login-form label {
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+/* Inputs del login: fondo clarito, borde suave */
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 9px 11px;
+    border-radius: 6px;
+    border: 1px solid var(--color-border-soft);
+    background: #f9fafb;
+    color: var(--color-text-main);
+}
+
+.btn-primary:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+}
+
+/* Que ocupe todo el ancho */
+.btn-full {
+    width: 100%;
+}
+
+/* Mensaje de error centrado */
+.error-message {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #dc2626;
+    text-align: center;
+}
