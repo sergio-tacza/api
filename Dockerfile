@@ -1,30 +1,11 @@
-# Build stage
-FROM eclipse-temurin:21-jdk AS build
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
-
-# Copiar archivos de Maven Wrapper
-COPY .mvn .mvn
-COPY mvnw .
-COPY mvnw.cmd .
 COPY pom.xml .
-
-# Dar permisos de ejecución
-RUN chmod +x mvnw
-
-# Descargar dependencias
-RUN ./mvnw dependency:go-offline
-
-# Copiar código fuente
 COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Compilar aplicación
-RUN ./mvnw package -DskipTests
-
-# Runtime stage
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-
-# Copiar el JAR compilado
 COPY --from=build /app/target/quarkus-app/lib/ /app/lib/
 COPY --from=build /app/target/quarkus-app/*.jar /app/
 COPY --from=build /app/target/quarkus-app/app/ /app/app/
