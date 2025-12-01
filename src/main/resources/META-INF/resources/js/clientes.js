@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 notas: notasInput.value.trim()
             };
 
-            if (!cliente.nombre || !cliente.telefono) {
-                alert('Nombre y teléfono son obligatorios');
+            if (!cliente.nombre || !cliente.telefono || !cliente.email) {
+                alert('Nombre,teléfono y el email son obligatorios');
                 return;
             }
 
@@ -154,17 +154,19 @@ async function actualizarCliente(id, cliente) {
     }
 }
 
-async function desactivarCliente(id) {
+async function cambiarEstadoCliente(id, activar) {
     try {
-        const response = await fetch(`/clientes/${id}/desactivar`, {
+        const endpoint = activar ? 'activar' : 'desactivar';
+        const response = await fetch(`/clientes/${id}/${endpoint}`, {
             method: 'PUT'
         });
         return response.ok;
     } catch (err) {
-        console.error('Error al desactivar cliente', err);
+        console.error('Error al cambiar estado cliente', err);
         return false;
     }
 }
+
 
 async function borrarCliente(id) {
     try {
@@ -229,23 +231,22 @@ function renderClientes(clientes, tbody) {
             btnDesactivar.className = 'btn secondary';
             btnDesactivar.style.marginLeft = '4px';
             btnDesactivar.addEventListener('click', async () => {
-                // tu lógica actual de activar/desactivar
-                await cambiarEstadoCliente(cliente.id, !cliente.activo);
+                const conf = confirm(`¿Seguro que quieres ${cliente.activo ? 'desactivar' : 'activar'} este cliente?`);
+                if (!conf) return;
+
+                const ok = await cambiarEstadoCliente(cliente.id, !cliente.activo);
+
+                if (ok) {
+                    // Recargar la tabla
+                    const tbodyElement = document.getElementById('clientsTableBody');
+                    const noDataElement = document.getElementById('clientsNoDataMessage');
+                    await cargarClientes(tbodyElement, noDataElement);
+                } else {
+                    alert('Error al cambiar estado del cliente');
+                }
             });
             tdAcciones.appendChild(btnDesactivar);
-
-            const btnBorrar = document.createElement('button');
-            btnBorrar.textContent = 'Borrar';
-            btnBorrar.className = 'btn danger';
-            btnBorrar.style.marginLeft = '8px';
-            btnBorrar.addEventListener('click', async () => {
-                const conf = confirm('¿Seguro que quieres borrar este cliente?');
-                if (!conf) return;
-                await borrarCliente(cliente.id);
-            });
-            tdAcciones.appendChild(btnBorrar);
         }
-
 
         tr.appendChild(tdNombre);
         tr.appendChild(tdTelefono);
@@ -257,6 +258,7 @@ function renderClientes(clientes, tbody) {
         tbody.appendChild(tr);
     });
 }
+
 
 
 // =======================

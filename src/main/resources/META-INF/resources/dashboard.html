@@ -2,111 +2,315 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title>Dashboard - TacBarber</title>
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Estilos específicos del dashboard manteniendo coherencia con el resto */
+
+        /* Alertas/Notificaciones */
+        .dashboard-alerts {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .alert-box {
+            flex: 1;
+            min-width: 280px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .alert-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.12);
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            border-left: 4px solid #0ea5e9;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 4px solid #10b981;
+        }
+
+        .alert-icon {
+            font-size: 24px;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            margin-bottom: 4px;
+        }
+
+        .alert-value {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--color-text-main);
+        }
+
+        /* Tarjetas resumen */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .dash-card {
+            background: var(--color-card);
+            padding: 16px 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid var(--color-border-soft);
+        }
+
+        .dash-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.12);
+        }
+
+        .dash-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .dash-icon {
+            font-size: 24px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, #c89335 100%);
+            color: white;
+        }
+
+        .dash-label {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dash-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--color-text-main);
+            margin-top: 4px;
+        }
+
+        /* Estado citas */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .status-card {
+            background: var(--color-card);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+            transition: all 0.3s ease;
+            border-top: 3px solid;
+        }
+
+        .status-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.12);
+        }
+
+        .status-label {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .status-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--color-text-main);
+        }
+
+        .status-pending { border-top-color: #f59e0b; }
+        .status-confirmed { border-top-color: #3b82f6; }
+        .status-completed { border-top-color: #10b981; }
+        .status-cancelled { border-top-color: #ef4444; }
+
+        /* Tabla wrapper */
+        .table-wrapper {
+            background: var(--color-card);
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
+        }
+
+        .small-table {
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
 
 <!-- MENÚ SUPERIOR -->
 <div class="top-menu">
-    <!-- Citas: lo ven TODOS -->
     <a href="citas.html" class="menu-item rol-admin rol-jefe rol-empleado">Citas</a>
-
-    <!-- Clientes: solo ADMIN y JEFE -->
     <a href="clientes.html" class="menu-item rol-admin rol-jefe">Clientes</a>
-
-    <!-- Servicios: solo ADMIN -->
     <a href="servicios.html" class="menu-item rol-admin">Servicios</a>
-
-    <!-- Dashboard: ADMIN y JEFE -->
-    <a href="dashboard.html" class="menu-item active rol-admin rol-jefe">Dashboard</a>
-
-    <!-- Calendario: lo ven TODOS -->
-    <a href="calendario.html" class="menu-item rol-admin rol-jefe rol-empleado">Calendario</a>
-
+    <a href="dashboard.html" class="menu-item rol-admin rol-jefe">Dashboard</a>
+    <a href="calendario.html" class="menu-item rol-admin rol-jefe rol-empleado rol-becario">Calendario</a>
+    <a href="empleados.html" class="menu-item rol-admin rol-jefe">Empleados</a>
     <button id="logoutBtn" class="logout-btn">Cerrar sesión</button>
 </div>
 
 <div class="container rol-admin rol-jefe">
+    <!-- HEADER -->
     <header class="header">
         <div>
-            <h1>Dashboard TacBarber</h1>
-            <p class="subtitle">Resumen de actividad y citas</p>
+            <h1>Dashboard</h1>
+            <p class="subtitle">Resumen de actividad y gestión</p>
         </div>
     </header>
+
+    <!-- ALERTAS/NOTIFICACIONES -->
+    <section class="dashboard-alerts">
+        <div class="alert-box alert-info">
+            <div class="alert-icon">📅</div>
+            <div class="alert-content">
+                <div class="alert-title">Citas de hoy</div>
+                <div class="alert-value" id="alertCitasHoy">0 citas</div>
+            </div>
+        </div>
+        <div class="alert-box alert-success">
+            <div class="alert-icon">👥</div>
+            <div class="alert-content">
+                <div class="alert-title">Clientes esta semana</div>
+                <div class="alert-value" id="alertClientesSemana">0 nuevos</div>
+            </div>
+        </div>
+    </section>
 
     <!-- TARJETAS RESUMEN -->
     <section class="dashboard-cards">
         <div class="dash-card">
-            <div class="dash-label">Citas hoy</div>
+            <div class="dash-card-header">
+                <div class="dash-icon">📅</div>
+                <div>
+                    <div class="dash-label">Citas hoy</div>
+                </div>
+            </div>
             <div class="dash-value" id="citasHoy">0</div>
         </div>
 
         <div class="dash-card">
-            <div class="dash-label">Citas últimos 7 días</div>
+            <div class="dash-card-header">
+                <div class="dash-icon">📊</div>
+                <div>
+                    <div class="dash-label">Última semana</div>
+                </div>
+            </div>
             <div class="dash-value" id="citasSemana">0</div>
         </div>
 
         <div class="dash-card">
-            <div class="dash-label">Clientes activos</div>
+            <div class="dash-card-header">
+                <div class="dash-icon">👥</div>
+                <div>
+                    <div class="dash-label">Clientes activos</div>
+                </div>
+            </div>
             <div class="dash-value" id="clientesActivos">0</div>
         </div>
 
         <div class="dash-card">
-            <div class="dash-label">Servicios activos</div>
+            <div class="dash-card-header">
+                <div class="dash-icon">✂️</div>
+                <div>
+                    <div class="dash-label">Servicios activos</div>
+                </div>
+            </div>
             <div class="dash-value" id="serviciosActivos">0</div>
         </div>
 
         <div class="dash-card">
-            <div class="dash-label">Ingresos hoy (estimado)</div>
+            <div class="dash-card-header">
+                <div class="dash-icon">💰</div>
+                <div>
+                    <div class="dash-label">Ingresos hoy</div>
+                </div>
+            </div>
             <div class="dash-value" id="ingresosHoy">0.00 €</div>
         </div>
     </section>
 
     <!-- ESTADO CITAS DE HOY -->
-    <section style="margin-top: 24px;">
+    <section>
         <h2>Estado de las citas de hoy</h2>
 
-        <table class="table small-table">
-            <thead>
-            <tr>
-                <th>Pendientes</th>
-                <th>Confirmadas</th>
-                <th>Completadas</th>
-                <th>Canceladas</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td id="citasPendientesHoy">0</td>
-                <td id="citasConfirmadasHoy">0</td>
-                <td id="citasCompletadasHoy">0</td>
-                <td id="citasCanceladasHoy">0</td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="status-grid">
+            <div class="status-card status-pending">
+                <div class="status-label">Pendientes</div>
+                <div class="status-value" id="citasPendientesHoy">0</div>
+            </div>
+            <div class="status-card status-confirmed">
+                <div class="status-label">Confirmadas</div>
+                <div class="status-value" id="citasConfirmadasHoy">0</div>
+            </div>
+            <div class="status-card status-completed">
+                <div class="status-label">Completadas</div>
+                <div class="status-value" id="citasCompletadasHoy">0</div>
+            </div>
+            <div class="status-card status-cancelled">
+                <div class="status-label">Canceladas</div>
+                <div class="status-value" id="citasCanceladasHoy">0</div>
+            </div>
+        </div>
     </section>
 
     <!-- ÚLTIMAS CITAS -->
-    <section style="margin-top: 28px;">
+    <section>
         <h2>Últimas citas registradas</h2>
 
-        <table class="table small-table">
-            <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Cliente</th>
-                <th>Servicio</th>
-                <th>Estado</th>
-            </tr>
-            </thead>
-            <tbody id="ultimasCitasBody">
-            <!-- Rellenado por dashboard.js -->
-            </tbody>
-        </table>
+        <div class="table-wrapper">
+            <table class="table small-table">
+                <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Cliente</th>
+                    <th>Servicio</th>
+                    <th>Estado</th>
+                </tr>
+                </thead>
+                <tbody id="ultimasCitasBody">
+                </tbody>
+            </table>
+        </div>
 
-        <p id="ultimasCitasNoData" style="display:none;">
+        <p id="ultimasCitasNoData" style="display:none; text-align:center; padding:20px; color:var(--color-text-muted);">
             No hay citas registradas.
         </p>
     </section>

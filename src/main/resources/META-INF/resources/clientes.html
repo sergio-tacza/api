@@ -10,10 +10,12 @@
 <!-- MENÚ SUPERIOR, IGUAL QUE EN CITAS -->
 <div class="top-menu">
     <a href="citas.html" class="menu-item rol-admin rol-jefe rol-empleado">Citas</a>
-    <a href="clientes.html" class="menu-item active rol-admin rol-jefe">Clientes</a>
+    <a href="clientes.html" class="menu-item rol-admin rol-jefe">Clientes</a>
     <a href="servicios.html" class="menu-item rol-admin">Servicios</a>
     <a href="dashboard.html" class="menu-item rol-admin rol-jefe">Dashboard</a>
-    <a href="calendario.html" class="menu-item rol-admin rol-jefe rol-empleado">Calendario</a>
+    <a href="calendario.html" class="menu-item rol-admin rol-jefe rol-empleado rol-becario" >Calendario</a>
+    <a href="empleados.html" class="menu-item rol-admin rol-jefe">Empleados</a>
+
 
     <button id="logoutBtn" class="logout-btn">Cerrar sesión</button>
 </div>
@@ -21,7 +23,7 @@
 <div class="container">
     <header class="header">
         <div>
-            <h1>Clientes TacBarber</h1>
+            <h1>Clientes</h1>
             <p class="subtitle">Gestión de la base de clientes</p>
         </div>
 
@@ -36,8 +38,9 @@
             <th>Teléfono</th>
             <th>Email</th>
             <th>Notas</th>
-            <th>Estado</th>
             <th>Acciones</th>
+            <th>Estado</th>
+
         </tr>
         </thead>
         <tbody id="clientsTableBody"></tbody>
@@ -55,7 +58,7 @@
             <input type="hidden" id="clienteId">
 
             <div class="form-group">
-                <label for="clienteNombre">Nombre</label>
+                <label for="clienteNombre">Nombre*</label>
                 <input type="text" id="clienteNombre" required>
             </div>
 
@@ -65,13 +68,13 @@
             </div>
 
             <div class="form-group">
-                <label for="clienteTelefono">Teléfono</label>
+                <label for="clienteTelefono">Teléfono*</label>
                 <input type="text" id="clienteTelefono" required>
             </div>
 
             <div class="form-group">
-                <label for="clienteEmail">Email</label>
-                <input type="email" id="clienteEmail">
+                <label for="clienteEmail">Email*</label>
+                <input type="email" id="clienteEmail" required>
             </div>
 
             <div class="form-group">

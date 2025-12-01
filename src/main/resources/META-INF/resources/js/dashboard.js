@@ -2,11 +2,7 @@
 let currentMonth = new Date();
 
 document.addEventListener('DOMContentLoaded', () => {
-
-
-    const logoutBtn = document.getElementById('logoutBtn');
-
-    // Cargar
+    // Cargar dashboard
     cargarDashboard();
 });
 
@@ -30,19 +26,40 @@ async function cargarDashboard() {
         // Tarjetas de arriba
         actualizarTarjetas(citas, clientes, servicios);
 
+        // Alertas
+        actualizarAlertas(citas);
+
         // Tabla de estado de hoy
         actualizarTablaEstadosHoy(citas);
 
         // Últimas citas
         actualizarUltimasCitas(citas);
 
-        // Calendario
-        renderCalendar(citas);
-        setupCalendarNav(citas);
-
     } catch (err) {
         console.error('Error en cargarDashboard', err);
     }
+}
+
+// ================= ALERTAS =================
+
+function actualizarAlertas(citas) {
+    const hoyStr = new Date().toISOString().substring(0, 10);
+    const ahora = new Date();
+
+    // Citas de hoy
+    let citasHoy = 0;
+    citas.forEach(cita => {
+        if (!cita.fechaHoraInicio) return;
+        const fechaStr = cita.fechaHoraInicio.split('T')[0];
+        if (fechaStr === hoyStr) {
+            citasHoy++;
+        }
+    });
+
+    document.getElementById('alertCitasHoy').textContent = `${citasHoy} cita${citasHoy !== 1 ? 's' : ''}`;
+
+    // Clientes esta semana (puedes personalizar según tu lógica)
+    document.getElementById('alertClientesSemana').textContent = '0 nuevos';
 }
 
 // ================= TARJETAS RESUMEN =================
@@ -173,95 +190,4 @@ function actualizarUltimasCitas(citas) {
 
         tbody.appendChild(tr);
     });
-}
-
-// ================= CALENDARIO =================
-
-function setupCalendarNav(citas) {
-    const prevBtn = document.getElementById('prevMonthBtn');
-    const nextBtn = document.getElementById('nextMonthBtn');
-
-    prevBtn.onclick = () => {
-        currentMonth.setMonth(currentMonth.getMonth() - 1);
-        renderCalendar(citas);
-    };
-
-    nextBtn.onclick = () => {
-        currentMonth.setMonth(currentMonth.getMonth() + 1);
-        renderCalendar(citas);
-    };
-}
-
-function renderCalendar(citas) {
-    const grid = document.getElementById('calendarGrid');
-    const label = document.getElementById('calendarMonthLabel');
-
-    grid.innerHTML = '';
-
-    const year = currentMonth.getFullYear();
-    const month = currentMonth.getMonth(); // 0–11
-
-    const nombresMes = [
-        'enero','febrero','marzo','abril','mayo','junio',
-        'julio','agosto','septiembre','octubre','noviembre','diciembre'
-    ];
-    label.textContent = `${nombresMes[month]} ${year}`;
-
-    // Primer día del mes
-    const firstDay = new Date(year, month, 1);
-    // Día de la semana (0 domingo, 1 lunes…). Lo pasamos a base lunes.
-    let startWeekday = firstDay.getDay(); // 0–6 (domingo-sábado)
-    if (startWeekday === 0) startWeekday = 7; // domingo -> 7
-    const leadingEmpty = startWeekday - 1;   // cuántos huecos antes
-
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-    const hoy = new Date();
-    const hoyStr = hoy.toISOString().substring(0, 10);
-
-    // Mételo
-    // 1) Huecos vacíos antes del día 1
-    for (let i = 0; i < leadingEmpty; i++) {
-        const empty = document.createElement('div');
-        empty.className = 'calendar-day empty';
-        grid.appendChild(empty);
-    }
-
-    // 2) Días del mes
-    for (let day = 1; day <= daysInMonth; day++) {
-        const fechaStr = `${year}-${String(month + 1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-
-        const citasDia = citas.filter(c => {
-            if (!c.fechaHoraInicio) return false;
-            return c.fechaHoraInicio.startsWith(fechaStr);
-        });
-
-        const dayDiv = document.createElement('div');
-        dayDiv.className = 'calendar-day';
-
-        // ¿es hoy?
-        if (fechaStr === hoyStr) {
-            dayDiv.classList.add('today');
-        }
-
-        // ¿tiene citas?
-        if (citasDia.length > 0) {
-            dayDiv.classList.add('has-events');
-        }
-
-        const numDiv = document.createElement('div');
-        numDiv.className = 'calendar-day-number';
-        numDiv.textContent = day;
-
-        dayDiv.appendChild(numDiv);
-
-        if (citasDia.length > 0) {
-            const evDiv = document.createElement('div');
-            evDiv.className = 'calendar-day-events';
-            evDiv.textContent = `${citasDia.length} cita${citasDia.length > 1 ? 's' : ''}`;
-            dayDiv.appendChild(evDiv);
-        }
-
-        grid.appendChild(dayDiv);
-    }
 }

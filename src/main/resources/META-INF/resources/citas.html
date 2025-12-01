@@ -6,30 +6,26 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-
-<!-- MENÚ SUPERIOR -->
 <div class="top-menu">
-    <a href="citas.html" class="menu-item active rol-admin rol-jefe rol-empleado">Citas</a>
+    <a href="citas.html" class="menu-item rol-admin rol-jefe rol-empleado">Citas</a>
     <a href="clientes.html" class="menu-item rol-admin rol-jefe">Clientes</a>
     <a href="servicios.html" class="menu-item rol-admin">Servicios</a>
     <a href="dashboard.html" class="menu-item rol-admin rol-jefe">Dashboard</a>
-    <a href="calendario.html" class="menu-item rol-admin rol-jefe rol-empleado">Calendario</a>
+    <a href="calendario.html" class="menu-item rol-admin rol-jefe rol-empleado rol-becario" >Calendario</a>
+    <a href="empleados.html" class="menu-item rol-admin rol-jefe">Empleados</a>
+
     <button id="logoutBtn" class="logout-btn">Cerrar sesión</button>
 </div>
-
 <div class="container">
     <header class="header">
         <div>
-            <h1>Agenda TacBarber</h1>
+            <h1>Agenda</h1>
             <p class="subtitle">Gestiona las citas y envía recordatorios por WhatsApp</p>
         </div>
-
         <button id="newAppointmentBtn" class="btn primary">
             Nueva cita
         </button>
     </header>
-
-    <!-- TABLA DE CITAS -->
     <section>
         <table class="table">
             <thead>
@@ -37,7 +33,8 @@
                 <th>Cliente</th>
                 <th>Teléfono</th>
                 <th>Servicio</th>
-                <th>Fecha</th>
+                <th>Barbero</th>
+                <th class="fecha">Fecha</th>
                 <th>Hora</th>
                 <th>Estado</th>
                 <th>Notas</th>
@@ -49,25 +46,29 @@
             <!-- Rellenado por JS -->
             </tbody>
         </table>
-
         <p id="noDataMessage" style="display:none;">
             No hay citas registradas.
         </p>
     </section>
-
-    <!-- FORMULARIO NUEVA CITA -->
-    <section id="newAppointmentFormSection" style="display:none; margin-top: 20px;">
+    <section id="newAppointmentFormSection" style="display:none; margin-top: 14px;">
         <h2>Nueva cita</h2>
-
         <form id="newAppointmentForm">
             <div class="form-group">
                 <label for="clienteId">Cliente</label>
                 <select id="clienteId" required></select>
             </div>
-
             <div class="form-group">
                 <label for="servicioId">Servicio</label>
                 <select id="servicioId" required></select>
+            </div>
+
+            <!-- Selector de barbero -->
+            <div class="form-group">
+                <label for="barberoId">Barbero (opcional)</label>
+                <select id="barberoId">
+                    <option value="">Sin asignar</option>
+                    <!-- Se rellena dinámicamente con JS -->
+                </select>
             </div>
 
             <div class="form-group">
@@ -79,20 +80,16 @@
                 <label for="hora">Hora</label>
                 <input type="time" id="hora" required>
             </div>
-
             <div class="form-group">
                 <label for="notas">Notas</label>
                 <input type="text" id="notas" placeholder="Ej: degradado alto, no tocar barba">
             </div>
-
             <button type="submit" class="btn primary">Guardar cita</button>
         </form>
     </section>
 </div>
-
 <script src="js/sesion.js"></script>
 <script src="js/roles.js"></script>
 <script src="js/citas.js"></script>
-
 </body>
 </html>

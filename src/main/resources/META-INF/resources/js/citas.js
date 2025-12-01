@@ -1,4 +1,7 @@
 // js/citas.js
+
+let barberos = []; // ← NUEVO: Para almacenar la lista de barberos
+
 document.addEventListener('DOMContentLoaded', () => {
     // 1) Comprobamos login
 
@@ -12,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const selectCliente = document.getElementById('clienteId');
     const selectServicio = document.getElementById('servicioId');
+    const selectBarbero = document.getElementById('barberoId'); // ← NUEVO
     const inputFecha = document.getElementById('fecha');
     const inputHora = document.getElementById('hora');
     const inputNotas = document.getElementById('notas');
@@ -41,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const current = newAppointmentFormSection.style.display;
             if (!current || current === 'none') {
                 newAppointmentFormSection.style.display = 'block';
+                // ← NUEVO: Cargar barberos cuando se abre el formulario
+                cargarBarberos(selectBarbero);
             } else {
                 newAppointmentFormSection.style.display = 'none';
             }
@@ -50,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5) Cargar datos iniciales
     cargarClientes(selectCliente);
     cargarServicios(selectServicio);
+    cargarBarberos(selectBarbero); // ← NUEVO
     // 🔹 Usamos el filtro si viene de calendario
     cargarCitas(tbody, noDataMessage, fechaFiltro);
 
@@ -60,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const clienteId = selectCliente.value;
             const servicioId = selectServicio.value;
+            const barberoId = selectBarbero ? selectBarbero.value : null; // ← NUEVO
             const fecha = inputFecha.value; // 2025-11-18
             const hora = inputHora.value;   // 16:35
             const notas = inputNotas.value;
@@ -75,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const nuevaCita = {
                 cliente:  { id: Number(clienteId) },
                 servicio: { id: Number(servicioId) },
+                barbero: barberoId ? { id: Number(barberoId) } : null, // ← NUEVO
                 fechaHoraInicio: fechaHoraInicio,
                 notas: notas
             };
@@ -163,6 +172,31 @@ async function cargarServicios(selectServicio) {
     }
 }
 
+// ← NUEVO: Función para cargar barberos
+async function cargarBarberos(selectBarbero) {
+    if (!selectBarbero) return;
+
+    try {
+        const res = await fetch('/empleados?soloActivos=true');
+        if (!res.ok) {
+            console.error('No se pudieron cargar los barberos');
+            return;
+        }
+
+        barberos = await res.json();
+        selectBarbero.innerHTML = '<option value="">Sin asignar</option>';
+
+        barberos.forEach(b => {
+            const opt = document.createElement('option');
+            opt.value = b.id;
+            opt.textContent = (b.nombre || '') + (b.apellidos ? (' ' + b.apellidos) : '');
+            selectBarbero.appendChild(opt);
+        });
+    } catch (err) {
+        console.error('Error al cargar /empleados', err);
+    }
+}
+
 
 // =======================
 //   CARGAR Y PINTAR CITAS
@@ -230,6 +264,17 @@ function renderCitas(citas, tbody) {
         // Servicio
         const tdServicio = document.createElement('td');
         tdServicio.textContent = (cita.servicio && cita.servicio.nombre) ? cita.servicio.nombre : '-';
+
+        // ← NUEVO: Barbero
+        const tdBarbero = document.createElement('td');
+        let nombreBarbero = 'Sin asignar';
+        if (cita.barbero && cita.barbero.nombre) {
+            nombreBarbero = cita.barbero.nombre;
+            if (cita.barbero.apellidos) {
+                nombreBarbero += ' ' + cita.barbero.apellidos;
+            }
+        }
+        tdBarbero.textContent = nombreBarbero;
 
         // Fecha / hora
         let fecha = '-';
@@ -320,6 +365,7 @@ function renderCitas(citas, tbody) {
         tr.appendChild(tdCliente);
         tr.appendChild(tdTelefono);
         tr.appendChild(tdServicio);
+        tr.appendChild(tdBarbero); // ← NUEVO: Columna barbero
         tr.appendChild(tdFecha);
         tr.appendChild(tdHora);
         tr.appendChild(tdEstado);

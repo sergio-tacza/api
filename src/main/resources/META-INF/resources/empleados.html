@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Empleados</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- MENÚ SUPERIOR -->
+<div class="top-menu">
+    <a href="citas.html" class="menu-item rol-admin rol-jefe rol-empleado">Citas</a>
+    <a href="clientes.html" class="menu-item rol-admin rol-jefe">Clientes</a>
+    <a href="servicios.html" class="menu-item rol-admin">Servicios</a>
+    <a href="dashboard.html" class="menu-item rol-admin rol-jefe">Dashboard</a>
+    <a href="calendario.html" class="menu-item rol-admin rol-jefe rol-empleado rol-becario" >Calendario</a>
+    <a href="empleados.html" class="menu-item rol-admin rol-jefe">Empleados</a>
+    <button id="logoutBtn" class="logout-btn">Cerrar sesión</button>
+</div>
+
+<div class="container">
+    <header class="header">
+        <div>
+            <h1>Empleados</h1>
+            <p class="subtitle">Gestión del equipo de empleados</p>
+        </div>
+        <button id="newEmployeeBtn" class="btn primary rol-admin rol-jefe">Nuevo empleado</button>
+    </header>
+
+    <!-- TABLA DE EMPLEADOS -->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th class="rol-admin rol-jefe">Acciones</th>
+        </tr>
+        </thead>
+        <tbody id="employeesTableBody"></tbody>
+    </table>
+
+    <p id="employeesNoDataMessage" style="display:none;">
+        No hay empleados registrados.
+    </p>
+
+    <!-- FORMULARIO NUEVO / EDITAR EMPLEADO -->
+    <section id="employeeFormSection" style="display:none; margin-top:20px;" class="rol-admin rol-jefe">
+        <h2 id="employeeFormTitle">Nuevo empleado</h2>
+        <form id="employeeForm">
+            <input type="hidden" id="empleadoId">
+
+            <div class="form-group">
+                <label for="empleadoNombre">Nombre*</label>
+                <input type="text" id="empleadoNombre" required>
+            </div>
+
+            <div class="form-group">
+                <label for="empleadoApellidos">Apellidos</label>
+                <input type="text" id="empleadoApellidos">
+            </div>
+
+            <div class="form-group">
+                <label for="empleadoEmail">Email*</label>
+                <input type="email" id="empleadoEmail" required>
+            </div>
+
+            <div class="form-group">
+                <label for="empleadoTelefono">Teléfono*</label>
+                <input type="text" id="empleadoTelefono" required>
+            </div>
+
+            <div class="form-group">
+                <label for="empleadoPassword">Contraseña*</label>
+                <input type="password" id="empleadoPassword" required>
+            </div>
+
+            <div class="form-group">
+                <label for="empleadoRol">Rol*</label>
+                <select id="empleadoRol" required>
+                    <option value="BECARIO">Becario</option>
+                    <option value="EMPLEADO">Empleado</option>
+                    <option value="JEFE">Jefe</option>
+                    <option value="ADMIN" class="rol-admin">Admin</option>
+                </select>
+            </div>
+
+
+
+            <button type="submit" class="btn primary">Guardar</button>
+            <button type="button" id="cancelEmployeeEditBtn" class="btn secondary">Cancelar</button>
+        </form>
+    </section>
+</div>
+
+<script src="js/sesion.js"></script>
+<script src="js/roles.js"></script>
+<script src="js/empleados.js"></script>
+</body>
+</html>

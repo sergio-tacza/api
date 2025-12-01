@@ -2,16 +2,13 @@
    PALETA / VARIABLES
    ========================== */
 :root {
-    --color-bg: #f3f4f6;        /* fondo gris clarito */
-    --color-card: #ffffff;      /* tarjetas blancas */
+    --color-bg: #f3f4f6;
+    --color-card: #ffffff;
     --color-border-soft: #e5e7eb;
-
-    --color-primary: #d9a441;   /* dorado */
+    --color-primary: #d9a441;
     --color-primary-dark: #c08920;
-
     --color-text-main: #111827;
     --color-text-muted: #6b7280;
-
     --radius-card: 14px;
     --shadow-card: 0 8px 24px rgba(15, 23, 42, 0.12);
 }
@@ -25,22 +22,11 @@ body {
     font-family: system-ui, sans-serif;
     background: var(--color-bg);
     color: var(--color-text-main);
+    font-size: 17px;
 }
 
 * {
     box-sizing: border-box;
-}
-
-/* ==========================
-   CONTENEDOR PRINCIPAL
-   ========================== */
-.container {
-    max-width: 1100px;
-    margin: 80px auto;
-    background: var(--color-card);
-    padding: 32px;
-    border-radius: var(--radius-card);
-    box-shadow: var(--shadow-card);
 }
 
 /* ==========================
@@ -51,23 +37,24 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    height: 65px;
-    background: var(--color-card);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 40px;
+    gap: 48px;
     padding: 0 40px;
+    height: 68px;
+    background: var(--color-card);
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     z-index: 100;
 }
 
 .top-menu a.menu-item {
     color: var(--color-text-main);
-    margin: 0 20px;
     text-decoration: none;
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 14px;
+    transition: color 0.15s;
 }
 
 .top-menu a.menu-item:hover {
@@ -76,44 +63,60 @@ body {
 
 .top-menu a.menu-item.active {
     color: var(--color-primary);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .logout-btn {
     margin-left: auto;
-    padding: 7px 16px;
+    padding: 9px 18px;
     border-radius: 999px;
     border: none;
     background: #ef4444;
     color: white;
     cursor: pointer;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 17px;
+}
+
+/* ==========================
+   CONTENEDOR PRINCIPAL
+   ========================== */
+.container {
+    max-width: 1300px;
+    margin: 90px auto 40px auto;
+    background: var(--color-card);
+    padding: 42px 36px 32px 36px;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    overflow-x: auto;
 }
 
 /* ==========================
    TITULOS
    ========================== */
 .header h1 {
-    margin: 0;
-    font-size: 24px;
+    margin: 0 0 16px 0;
+    font-size: 42px;
     color: var(--color-primary);
+    font-weight: 900;
+    letter-spacing: 2px;
 }
 
 .subtitle {
-    font-size: 14px;
+    font-size: 18px;
     color: var(--color-text-muted);
+    margin-bottom: 12px;
 }
 
 /* ==========================
    BOTONES
    ========================== */
 .btn {
-    padding: 8px 16px;
+    padding: 11px 20px;
     border-radius: 999px;
     border: none;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 600;
 }
 
@@ -140,22 +143,21 @@ body {
 /* ==========================
    FORMULARIOS
    ========================== */
-
 .form-group {
-    margin-bottom: 14px;
+    margin-bottom: 18px;
 }
 
 label {
-    font-size: 14px;
-    margin-bottom: 6px;
+    font-size: 17px;
+    margin-bottom: 8px;
     display: block;
+    font-weight: 500;
 }
 
-input,
-select {
+input, select {
     width: 100%;
-    padding: 9px 10px;
-    font-size: 14px;
+    padding: 12px 14px;
+    font-size: 17px;
     border-radius: 8px;
     border: 1px solid var(--color-border-soft);
     background: white;
@@ -163,8 +165,7 @@ select {
     transition: 0.15s;
 }
 
-input:focus,
-select:focus {
+input:focus, select:focus {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 1px rgba(217, 164, 65, 0.4);
     outline: none;
@@ -173,11 +174,10 @@ select:focus {
 /* ==========================
    TABLAS
    ========================== */
-
 .table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 14px;
+    margin-top: 18px;
     background: white;
     border-radius: 12px;
     overflow: hidden;
@@ -187,29 +187,42 @@ select:focus {
 .table th {
     background: #fafafa;
     text-align: left;
-    padding: 12px 14px;
-    font-size: 14px;
+    padding: 14px 16px;
+    font-size: 17px;
     border-bottom: 1px solid var(--color-border-soft);
+    white-space: nowrap;
 }
 
 .table td {
-    padding: 12px 14px;
+    padding: 14px 16px;
     border-bottom: 1px solid var(--color-border-soft);
-    font-size: 14px;
+    font-size: 16px;
+}
+
+.table th.fecha, .table td.fecha {
+    min-width: 130px;
+    text-align: center;
 }
 
 .table tr:hover {
     background: #f9fafb;
 }
 
+/* Títulos de sección */
+section h2 {
+    font-size: 26px;
+    margin-bottom: 16px;
+    margin-top: 18px;
+    font-weight: 700;
+}
+
 /* ==========================
    ESTADOS DE CITA
    ========================== */
-
 .estado {
-    padding: 4px 12px;
+    padding: 6px 14px;
     border-radius: 999px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
 }
 
@@ -221,7 +234,6 @@ select:focus {
 /* ==========================
    CALENDARIO
    ========================== */
-
 .calendar-section {
     background: white;
     border-radius: 14px;
@@ -249,19 +261,17 @@ select:focus {
 /* ==========================
    BOTÓN WHATSAPP
    ========================== */
-
 .whatsapp-btn {
     background: #25D366;
     color: white;
-    padding: 6px 12px;
+    padding: 8px 14px;
     border-radius: 999px;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 /* ==========================
    DASHBOARD: TARJETAS RESUMEN
    ========================== */
-
 .dashboard-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -294,7 +304,6 @@ select:focus {
 /* ==========================
    DASHBOARD: LAYOUT CALENDARIO + TABLAS
    ========================== */
-
 .dashboard-grid {
     display: grid;
     grid-template-columns: 2fr 3fr;
@@ -308,7 +317,6 @@ select:focus {
     }
 }
 
-/* bloque del calendario dentro del dashboard (ya tenías .calendar-section) */
 .dashboard-calendar-block {
     display: flex;
     flex-direction: column;
@@ -318,7 +326,6 @@ select:focus {
 /* ==========================
    TABLAS PEQUEÑAS DEL DASHBOARD
    ========================== */
-
 .small-table {
     width: 100%;
     border-collapse: collapse;
@@ -345,24 +352,22 @@ select:focus {
     background: #f9fafb;
 }
 
-/* título de secciones dentro del dashboard ("Estado de las citas de hoy", etc.) */
 .section-title {
     font-size: 16px;
     font-weight: 600;
     margin: 18px 0 10px 0;
     color: var(--color-text-main);
 }
+
 /* =========================================
    ESTILOS PANTALLA DE LOGIN (index.html)
    ========================================= */
-
 .login-body {
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background: var(--color-bg);
 }
 
-/* Centrar la tarjeta en la pantalla */
 .login-wrapper {
     min-height: 100vh;
     display: flex;
@@ -371,7 +376,6 @@ select:focus {
     padding: 16px;
 }
 
-/* Tarjeta blanca tipo ejemplo */
 .login-card {
     background: #ffffff;
     border-radius: var(--radius-card);
@@ -381,7 +385,6 @@ select:focus {
     max-width: 380px;
 }
 
-/* Cabecera con logo TB arriba a la derecha */
 .login-card-header {
     display: flex;
     justify-content: flex-end;
@@ -395,14 +398,12 @@ select:focus {
     letter-spacing: 1px;
 }
 
-/* Título "Iniciar sesión" */
 .login-title {
     margin: 0 0 20px;
     font-size: 24px;
     color: var(--color-text-main);
 }
 
-/* Formulario */
 .login-form .form-group {
     margin-bottom: 16px;
 }
@@ -412,7 +413,6 @@ select:focus {
     color: var(--color-text-muted);
 }
 
-/* Inputs del login: fondo clarito, borde suave */
 .login-form input[type="text"],
 .login-form input[type="password"] {
     width: 100%;
@@ -428,15 +428,33 @@ select:focus {
     transform: translateY(-1px);
 }
 
-/* Que ocupe  */
 .btn-full {
     width: 100%;
 }
 
-/* Mensaje de error centrado */
 .error-message {
     margin-top: 12px;
     font-size: 13px;
     color: #dc2626;
     text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 1000px) {
+    .container {
+        padding: 20px 12px;
+        max-width: 97vw;
+        font-size: 15px;
+    }
+    .header h1 { font-size: 28px;}
+    .subtitle { font-size: 13px;}
+    .table th, .table td { font-size: 14px; padding: 10px;}
+    section h2 { font-size: 18px;}
+    .btn { font-size: 14px; padding: 8px 14px;}
+    .top-menu a.menu-item { font-size: 16px;}
+}
+.login-logo-img {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
 }

@@ -3,6 +3,7 @@ package com.tacbarber.api;
 import com.tacbarber.domain.Cita;
 import com.tacbarber.domain.Cliente;
 import com.tacbarber.domain.Servicio;
+import com.tacbarber.domain.Usuario;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -51,14 +52,15 @@ public class CitasResource {
     }
 
     // ==========================
-    // CREAR CITA
-    // ==========================
+// CREAR CITA
+// ==========================
     /**
      * JSON esperado (lo manda tu frontend):
      *
      * {
      *   "cliente": { "id": 1 },
      *   "servicio": { "id": 2 },
+     *   "barbero": { "id": 3 },  ← NUEVO (opcional)
      *   "fechaHoraInicio": "2025-11-17T10:00",
      *   "notas": "degradado alto"
      * }
@@ -92,6 +94,14 @@ public class CitasResource {
         cita.estado = "PENDIENTE";
         cita.notas = dto.notas;
 
+        // ← NUEVO: Asignar barbero si viene en el DTO
+        if (dto.barbero != null && dto.barbero.id != null) {
+            Usuario barbero = Usuario.findById(dto.barbero.id);
+            if (barbero != null) {
+                cita.barbero = barbero;
+            }
+        }
+
         // Calculamos fechaHoraFin a partir de la duración del servicio (si existe)
         if (servicio.duracionMin != null && dto.fechaHoraInicio != null) {
             cita.fechaHoraFin = dto.fechaHoraInicio.plusMinutes(servicio.duracionMin);
@@ -103,6 +113,7 @@ public class CitasResource {
                 .entity(cita)
                 .build();
     }
+
 
     // ==========================
     // CAMBIAR ESTADO: CANCELAR

@@ -120,15 +120,33 @@ public class ClientesResource {
         c.activo = false;
         return c;
     }
+    // PUT /clientes/{id}/activar → marca el cliente como activo
+    @PUT
+    @Path("/{id}/activar")
+    @Transactional
+    public Cliente activar(@PathParam("id") Long id) {
+        Cliente c = Cliente.findById(id);
+        if (c == null) {
+            throw new NotFoundException("Cliente no encontrado");
+        }
+        c.activo = true;
+        return c;
+    }
 
-    // DELETE /clientes/{id} → borrado real (por si lo quieres mantener)
+
+    // DELETE /clientes/{id} → desactivar cliente (borrado lógico)
     @DELETE
     @Path("/{id}")
     @Transactional
-    public void delete(@PathParam("id") Long id) {
-        boolean deleted = Cliente.deleteById(id);
-        if (!deleted) {
+    public Response delete(@PathParam("id") Long id) {
+        Cliente c = Cliente.findById(id);
+        if (c == null) {
             throw new NotFoundException("Cliente no encontrado");
         }
+
+        // Borrado lógico: simplemente desactivamos
+        c.activo = false;
+
+        return Response.ok(c).build();
     }
 }

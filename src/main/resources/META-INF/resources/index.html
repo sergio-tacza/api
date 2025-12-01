@@ -3,35 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <title>TacBarber - Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Animación de entrada */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Fondo con gradiente sutil */
+        .login-body {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+        }
+
+        .login-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 48px 48px 36px;
+            box-shadow: 0 20px 50px rgba(15,23,42,0.15), 0 5px 15px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 540px;
+            animation: fadeInUp 0.7s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efecto sutil de brillo en el fondo */
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(217,164,65,0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .login-card-header {
+            margin-bottom: 24px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-logo-img {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(217,164,65,0.2));
+            transition: transform 0.3s ease;
+            display: block;
+            margin: 0 auto;
+        }
+
+
+        .login-logo-img:hover {
+            transform: scale(1.05);
+        }
+
+        .login-title {
+            font-size: 34px;
+            margin-bottom: 32px;
+            color: var(--color-text-main);
+            font-weight: 700;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Inputs limpios */
+        .login-form .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .login-form .form-group label {
+            font-size: 15px;
+            color: var(--color-text-muted);
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
+            width: 100%;
+            padding: 16px 18px;
+            font-size: 17px;
+            border: 2px solid var(--color-border-soft);
+            border-radius: 12px;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+        }
+
+        .login-form input[type="text"]:focus,
+        .login-form input[type="password"]:focus {
+            border-color: var(--color-primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(217,164,65,0.1);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        /* Botón mejorado */
+        .btn-full, .btn-primary {
+            font-size: 18px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow: 0 4px 14px rgba(255, 202, 80, 0.3);
+
+
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(217,164,65,0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(217,164,65,0.3);
+        }
+
+        /* Mensaje de error mejorado */
+        .error-message {
+            margin-top: 20px;
+            padding: 14px 18px;
+            background: #fee;
+            border-left: 4px solid #dc2626;
+            border-radius: 8px;
+            color: #dc2626;
+            font-size: 15px;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .login-card {
+                padding: 32px 24px 28px;
+                max-width: 95vw;
+                border-radius: 16px;
+            }
+            .login-title {
+                font-size: 28px;
+            }
+            .login-logo-img {
+                height: 60px;
+            }
+        }
+    </style>
 </head>
 <body class="login-body">
 
 <div class="login-wrapper">
     <div class="login-card">
-        <div class="login-card-header">
-            <div class="login-logo">TB</div>
+        <div class="login-card-header" style="text-align: center;">
+            <img src="images/logotacbarberblanco.png" alt="TacBarber Logo" class="login-logo-img">
         </div>
-
         <h1 class="login-title">Iniciar sesión</h1>
-
         <form id="loginForm" class="login-form">
             <div class="form-group">
                 <label for="email">Email o usuario</label>
-                <input type="text" id="email" name="email" required>
+                <input type="text" id="email" name="email" required autocomplete="username">
             </div>
-
             <div class="form-group">
                 <label for="password">Contraseña</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" required autocomplete="current-password">
             </div>
-
-            <!-- Nada de “¿Olvidaste la contraseña?” de momento -->
-
             <button type="submit" class="btn btn-primary btn-full">
                 Iniciar sesión
             </button>
-
+            <div style="text-align: center; margin-top: 16px;">
+                <a href="recuperar-password.html" style="color: var(--color-primary); text-decoration: none; font-size: 15px; transition: opacity 0.3s;">
+                    ¿Olvidaste tu contraseña?
+                </a>
+            </div>
             <p id="loginError" class="error-message" style="display:none;">
                 Credenciales incorrectas. Revisa usuario y contraseña.
             </p>

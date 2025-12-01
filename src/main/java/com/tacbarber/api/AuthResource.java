@@ -2,19 +2,26 @@ package com.tacbarber.api;
 
 import com.tacbarber.domain.Usuario;
 import com.tacbarber.domain.Rol;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.NotAuthorizedException;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import com.tacbarber.domain.TokenRecuperacion;
+import com.tacbarber.util.PasswordUtil;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import io.quarkus.mailer.Mail;
+import io.quarkus.mailer.Mailer;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.UUID;
 
 @Path("/auth")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AuthResource {
+
+    @Inject
+    Mailer mailer;
 
     public static class LoginRequest {
         public String email;
@@ -45,8 +52,8 @@ public class AuthResource {
             throw new NotAuthorizedException("Credenciales incorrectas");
         }
 
-        // Comprobar password (tú aun usas texto plano)
-        if (!u.passwordHash.equals(req.password)) {
+        // Comprobar password con BCrypt
+        if (!PasswordUtil.verificarPassword(req.password, u.passwordHash)) {
             throw new NotAuthorizedException("Credenciales incorrectas");
         }
 
@@ -58,5 +65,107 @@ public class AuthResource {
         resp.mensaje = "Login correcto";
 
         return Response.ok(resp).build();
+    }
+
+    // POST /auth/solicitar-recuperacion
+    @POST
+    @Path("/solicitar-recuperacion")
+    @Transactional
+    public Response solicitarRecuperacion(Map<String, String> request) {
+        String email = request.get("email");
+
+        if (email == null || email.isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        // Buscar usuario por email
+        System.out.println("🔍 Buscando email: [" + email + "]");
+        Usuario usuario = Usuario.find("email", email).firstResult();
+
+        if (usuario == null) {
+            System.out.println("No se encontró usuario con ese email");
+            System.out.println("Usuarios en BD:");
+            Usuario.listAll().forEach(u -> System.out.println("  - " + usuario.email));
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        System.out.println("✅ Usuario encontrado: " + usuario.nombre);
+
+
+        // Generar token único
+        String token = UUID.randomUUID().toString();
+
+        // Crear registro de recuperación
+        TokenRecuperacion tokenRecup = new TokenRecuperacion();
+        tokenRecup.usuario = usuario;
+        tokenRecup.token = token;
+        tokenRecup.fechaExpiracion = LocalDateTime.now().plusHours(1); // Válido por 1 hora
+        tokenRecup.usado = false;
+        tokenRecup.persist();
+
+        // Enviar email
+        String linkRecuperacion = "http://localhost:8080/resetear-password.html?token=" + token;
+
+        mailer.send(
+                Mail.withText(
+                        email,
+                        "Recuperación de contraseña - TacBarber",
+                        "Hola " + usuario.nombre + ",\n\n" +
+                                "Has solicitado recuperar tu contraseña.\n\n" +
+                                "Haz clic en el siguiente enlace para crear una nueva contraseña:\n" +
+                                linkRecuperacion + "\n\n" +
+                                "Este enlace expirará en 1 hora.\n\n" +
+                                "Si no solicitaste este cambio, ignora este email.\n\n" +
+                                "Saludos,\nEquipo TacBarber"
+                )
+        );
+
+        return Response.ok().build();
+    }
+
+    // POST /auth/resetear-password
+    @POST
+    @Path("/resetear-password")
+    @Transactional
+    public Response resetearPassword(Map<String, String> request) {
+        String token = request.get("token");
+        String nuevaPassword = request.get("password");
+
+        if (token == null || nuevaPassword == null || nuevaPassword.isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Token o contraseña inválidos").build();
+        }
+
+        // Buscar token válido
+        TokenRecuperacion tokenRecup = TokenRecuperacion.findByTokenValido(token);
+
+        if (tokenRecup == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Token inválido o expirado").build();
+        }
+
+        // Cambiar contraseña
+        Usuario usuario = tokenRecup.usuario;
+        usuario.passwordHash = PasswordUtil.cifrarPassword(nuevaPassword);
+
+        // Marcar token como usado
+        tokenRecup.usado = true;
+
+        return Response.ok().build();
+    }
+
+    // GET /auth/validar-token?token=xxx
+    @GET
+    @Path("/validar-token")
+    public Response validarToken(@QueryParam("token") String token) {
+        if (token == null || token.isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        TokenRecuperacion tokenRecup = TokenRecuperacion.findByTokenValido(token);
+
+        if (tokenRecup == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        return Response.ok().build();
     }
 }
