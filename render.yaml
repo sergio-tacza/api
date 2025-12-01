@@ -2,12 +2,8 @@ services:
   - type: web
     name: tacbarber-api
     runtime: docker
-    repo: https://github.com/sergio-tacza/api
-    region: frankfurt
     plan: free
-    branch: main
     dockerfilePath: ./Dockerfile
-    dockerContext: .
     envVars:
       - key: DATABASE_HOST
         value: dpg-d4mokdje5dus738h49m0-a.frankfurt-postgres.render.com
