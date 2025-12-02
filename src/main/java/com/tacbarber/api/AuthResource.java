@@ -31,7 +31,7 @@ public class AuthResource {
     public static class LoginResponse {
         public Long userId;
         public String email;
-        public String rol;   // string pa frontend
+        public String rol;
         public String mensaje;
     }
 
@@ -39,23 +39,42 @@ public class AuthResource {
     @Path("/login")
     public Response login(LoginRequest req) {
 
+        System.out.println("🔵 === INICIO LOGIN ===");
+        System.out.println("📧 Email recibido: [" + req.email + "]");
+        System.out.println("🔑 Password recibida: [" + req.password + "]");
+
         // Validar entrada
         if (req == null ||
                 req.email == null || req.email.isBlank() ||
                 req.password == null || req.password.isBlank()) {
+            System.out.println("❌ Validación falló");
             throw new BadRequestException("Email y contraseña son obligatorios");
         }
 
         // Buscar usuario
         Usuario u = Usuario.find("email", req.email).firstResult();
         if (u == null) {
+            System.out.println("❌ Usuario no encontrado: " + req.email);
+            System.out.println("📋 Usuarios en BD:");
+            for (Usuario usr : Usuario.<Usuario>listAll()) {
+                System.out.println("  - " + usr.email);
+            }
             throw new NotAuthorizedException("Credenciales incorrectas");
         }
 
+        System.out.println("✅ Usuario encontrado: " + u.email);
+        System.out.println("🔑 Hash en BD: " + u.passwordHash);
+
         // Comprobar password con BCrypt
-        if (!PasswordUtil.verificarPassword(req.password, u.passwordHash)) {
+        boolean esCorrecta = PasswordUtil.verificarPassword(req.password, u.passwordHash);
+        System.out.println("🔐 ¿Password correcta? " + esCorrecta);
+
+        if (!esCorrecta) {
+            System.out.println("❌ Password incorrecta");
             throw new NotAuthorizedException("Credenciales incorrectas");
         }
+
+        System.out.println("✅ LOGIN EXITOSO");
 
         // OK → devolvemos usuario
         LoginResponse resp = new LoginResponse();
@@ -85,12 +104,13 @@ public class AuthResource {
         if (usuario == null) {
             System.out.println("No se encontró usuario con ese email");
             System.out.println("Usuarios en BD:");
-            Usuario.listAll().forEach(u -> System.out.println("  - " + usuario.email));
+            for (Usuario u : Usuario.<Usuario>listAll()) {
+                System.out.println("  - " + u.email);
+            }
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         System.out.println("✅ Usuario encontrado: " + usuario.nombre);
-
 
         // Generar token único
         String token = UUID.randomUUID().toString();
@@ -99,12 +119,12 @@ public class AuthResource {
         TokenRecuperacion tokenRecup = new TokenRecuperacion();
         tokenRecup.usuario = usuario;
         tokenRecup.token = token;
-        tokenRecup.fechaExpiracion = LocalDateTime.now().plusHours(1); // Válido por 1 hora
+        tokenRecup.fechaExpiracion = LocalDateTime.now().plusHours(1);
         tokenRecup.usado = false;
         tokenRecup.persist();
 
         // Enviar email
-        String linkRecuperacion = "http://localhost:8080/resetear-password.html?token=" + token;
+        String linkRecuperacion = "https://tacbarber.onrender.com/resetear-password.html?token=" + token;
 
         mailer.send(
                 Mail.withText(
