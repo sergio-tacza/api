@@ -1,2 +1,0 @@
-ALTER TABLE cita
-ADD COLUMN recordatorio_enviado BOOLEAN NOT NULL DEFAULT FALSE;

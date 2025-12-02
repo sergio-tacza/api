@@ -1,5 +1,0 @@
--- V7__agregar_campos_empleados.sql
-ALTER TABLE usuario
-    ADD COLUMN IF NOT EXISTS telefono VARCHAR(20),
-    ADD COLUMN IF NOT EXISTS fecha_alta TIMESTAMP DEFAULT NOW(),
-    ADD COLUMN IF NOT EXISTS activo BOOLEAN NOT NULL DEFAULT TRUE;

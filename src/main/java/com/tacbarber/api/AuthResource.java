@@ -66,7 +66,7 @@ public class AuthResource {
         System.out.println("🔑 Hash en BD: " + u.passwordHash);
 
         // Comprobar password con BCrypt
-        boolean esCorrecta = PasswordUtil.verificarPassword(req.password, u.passwordHash);
+        boolean esCorrecta = req.password.equals(u.passwordHash);
         System.out.println("🔐 ¿Password correcta? " + esCorrecta);
 
         if (!esCorrecta) {
