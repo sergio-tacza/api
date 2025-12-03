@@ -96,6 +96,13 @@
             <artifactId>quarkus-scheduler</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.sendgrid</groupId>
+            <artifactId>sendgrid-java</artifactId>
+            <version>4.10.2</version>
+        </dependency>
+
+
         <!-- Tests -->
         <dependency>
             <groupId>io.quarkus</groupId>

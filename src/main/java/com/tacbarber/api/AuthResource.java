@@ -4,14 +4,13 @@ import com.tacbarber.domain.Usuario;
 import com.tacbarber.domain.Rol;
 import com.tacbarber.domain.TokenRecuperacion;
 import com.tacbarber.util.PasswordUtil;
+import com.tacbarber.util.EmailService;
 import io.quarkus.hibernate.orm.panache.Panache;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import io.quarkus.mailer.Mail;
-import io.quarkus.mailer.Mailer;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
@@ -22,7 +21,7 @@ import java.util.UUID;
 public class AuthResource {
 
     @Inject
-    Mailer mailer;
+    EmailService emailService;
 
     public static class LoginRequest {
         public String email;
@@ -100,29 +99,37 @@ public class AuthResource {
         Usuario usuario = Usuario.find("LOWER(email) = LOWER(?1)", email.trim()).firstResult();
 
         if (usuario == null) {
+            System.out.println("❌ No se encontró usuario con email: " + email);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
+        System.out.println("✅ Usuario encontrado: " + usuario.nombre);
+
         String token = UUID.randomUUID().toString();
 
-        // Guardar en método transaccional separado
+        // Guardar token en transacción separada
         guardarTokenRecuperacion(usuario, token);
 
-        // Enviar email fuera de transacción
+        // Enviar email con SendGrid
         String linkRecuperacion = "https://tacbarber.onrender.com/resetear-password.html?token=" + token;
-        mailer.send(
-                Mail.withText(
-                        email,
-                        "Recuperación de contraseña - TacBarber",
-                        "Hola " + usuario.nombre + ",\n\n" +
-                                "Has solicitado recuperar tu contraseña.\n\n" +
-                                "Haz clic en el siguiente enlace para crear una nueva contraseña:\n" +
-                                linkRecuperacion + "\n\n" +
-                                "Este enlace expirará en 1 hora.\n\n" +
-                                "Si no solicitaste este cambio, ignora este email.\n\n" +
-                                "Saludos,\nEquipo TacBarber"
-                )
-        );
+
+        try {
+            emailService.enviarEmail(
+                    email,
+                    "Recuperación de contraseña - TacBarber",
+                    "Hola " + usuario.nombre + ",\n\n" +
+                            "Has solicitado recuperar tu contraseña.\n\n" +
+                            "Haz clic en el siguiente enlace para crear una nueva contraseña:\n" +
+                            linkRecuperacion + "\n\n" +
+                            "Este enlace expirará en 1 hora.\n\n" +
+                            "Si no solicitaste este cambio, ignora este email.\n\n" +
+                            "Saludos,\nEquipo TacBarber"
+            );
+            System.out.println("✅ Email enviado correctamente");
+        } catch (Exception e) {
+            System.err.println("❌ Error enviando email: " + e.getMessage());
+            // Continuamos aunque falle el email, el token ya está guardado
+        }
 
         return Response.ok().build();
     }
@@ -136,9 +143,6 @@ public class AuthResource {
         tokenRecup.usado = false;
         tokenRecup.persist();
     }
-
-
-
 
     // POST /auth/resetear-password
     @POST
