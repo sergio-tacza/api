@@ -2,7 +2,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const usuarioStr = localStorage.getItem('usuarioActual');
     if (!usuarioStr) {
-        // Sesion.js ya se encarga de echarte si no hay sesión
         console.log('[ROLES] No hay usuarioActual en localStorage');
         return;
     }
@@ -23,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rol = (usuario.rol || '').toUpperCase();
     console.log('[ROLES] Rol actual:', rol);
 
-    // Exponemos helpers globales por si los necesitamos en otros JS
+    // Exponemos helpers globales
     window.Roles = {
         rolActual: rol,
         esAdmin: () => rol === 'ADMIN',
@@ -33,19 +32,28 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ==========================
-    // REGLAS POR ROL
+    // OCULTAR ELEMENTOS SEGÚN CLASES DE ROL
     // ==========================
-    //
-    // ADMIN: ve todo
-    // JEFE: ve todo
-    // EMPLEADO:
-    //   - NO ve el menú de Clientes
-    //   - NO ve el menú de Servicios
-    //   - NO ve los botones "Nuevo cliente" / "Nuevo servicio"
-    // BECARIO:
-    //   - SOLO ve Calendario
-    //   - Redirige si intenta acceder a otras páginas
-    //
+    const rolClass = `rol-${rol.toLowerCase()}`;
+
+    // Buscar todos los elementos con clases de rol
+    document.querySelectorAll('[class*="rol-"]').forEach(elemento => {
+        // Si el elemento NO tiene la clase del rol actual, ocultarlo
+        if (!elemento.classList.contains(rolClass) && !elemento.classList.contains('rol-' + rol.toLowerCase())) {
+            // Verificar si tiene alguna clase rol-*
+            const tieneRolPermitido = Array.from(elemento.classList).some(clase => {
+                if (clase.startsWith('rol-')) {
+                    const rolRequerido = clase.replace('rol-', '').toUpperCase();
+                    return rolRequerido === rol;
+                }
+                return false;
+            });
+
+            if (!tieneRolPermitido) {
+                elemento.style.display = 'none';
+            }
+        }
+    });
 
     // ==========================
     // BECARIO: Restricción máxima
@@ -54,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const paginaActual = window.location.pathname;
         const paginasPermitidas = ['/calendario.html', '/index.html'];
 
-        // Si el becario intenta acceder a otra página, redirigir
         const tieneAcceso = paginasPermitidas.some(p => paginaActual.includes(p));
 
         if (!tieneAcceso) {
@@ -62,49 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'calendario.html';
             return;
         }
-
-        // Ocultar TODOS los menús excepto Calendario
-        const menuCitas = document.querySelector("a[href='citas.html']");
-        const menuClientes = document.querySelector("a[href='clientes.html']");
-        const menuEmpleados = document.querySelector("a[href='empleados.html']");
-        const menuServicios = document.querySelector("a[href='servicios.html']");
-        const menuDashboard = document.querySelector("a[href='dashboard.html']");
-
-        if (menuCitas) menuCitas.style.display = 'none';
-        if (menuClientes) menuClientes.style.display = 'none';
-        if (menuEmpleados) menuEmpleados.style.display = 'none';
-        if (menuServicios) menuServicios.style.display = 'none';
-        if (menuDashboard) menuDashboard.style.display = 'none';
-
-        console.log('[ROLES] BECARIO: Acceso restringido solo a Calendario');
-        return; // Ya no hace falta seguir con otras reglas
     }
 
-    // ==========================
-    // EMPLEADO: Restricciones medias
-    // ==========================
-    if (rol === 'EMPLEADO') {
-        // Ocultar items de menú
-        const menuClientes = document.querySelector("a[href='clientes.html']");
-        const menuServicios = document.querySelector("a[href='servicios.html']");
-
-        if (menuClientes) menuClientes.style.display = 'none';
-        if (menuServicios) menuServicios.style.display = 'none';
-
-        // Ocultar botones de creación si está en esas páginas
-        const btnNuevoCliente = document.getElementById('newClientBtn');
-        if (btnNuevoCliente) {
-            btnNuevoCliente.style.display = 'none';
-        }
-
-        const btnNuevoServicio = document.getElementById('newServiceBtn');
-        if (btnNuevoServicio) {
-            btnNuevoServicio.style.display = 'none';
-        }
-
-        console.log('[ROLES] EMPLEADO: Restricciones aplicadas');
-    }
-
-    // ADMIN y JEFE: sin restricciones adicionales
     console.log('[ROLES] Restricciones aplicadas correctamente');
 });
