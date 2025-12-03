@@ -4,6 +4,7 @@ import com.tacbarber.domain.Usuario;
 import com.tacbarber.domain.Rol;
 import com.tacbarber.domain.TokenRecuperacion;
 import com.tacbarber.util.PasswordUtil;
+import io.quarkus.hibernate.orm.panache.Panache;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -89,7 +90,6 @@ public class AuthResource {
     // POST /auth/solicitar-recuperacion
     @POST
     @Path("/solicitar-recuperacion")
-    @Transactional
     public Response solicitarRecuperacion(Map<String, String> request) {
         String email = request.get("email");
 
@@ -97,35 +97,19 @@ public class AuthResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        // Buscar usuario por email
-        System.out.println("🔍 Buscando email: [" + email + "]");
         Usuario usuario = Usuario.find("LOWER(email) = LOWER(?1)", email.trim()).firstResult();
 
         if (usuario == null) {
-            System.out.println("No se encontró usuario con ese email");
-            System.out.println("Usuarios en BD:");
-            for (Usuario u : Usuario.<Usuario>listAll()) {
-                System.out.println("  - " + u.email);
-            }
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        System.out.println("✅ Usuario encontrado: " + usuario.nombre);
-
-        // Generar token único
         String token = UUID.randomUUID().toString();
 
-        // Crear registro de recuperación
-        TokenRecuperacion tokenRecup = new TokenRecuperacion();
-        tokenRecup.usuario = usuario;
-        tokenRecup.token = token;
-        tokenRecup.fechaExpiracion = LocalDateTime.now().plusHours(1);
-        tokenRecup.usado = false;
-        tokenRecup.persist();
+        // Guardar en método transaccional separado
+        guardarTokenRecuperacion(usuario, token);
 
-        // Enviar email
+        // Enviar email fuera de transacción
         String linkRecuperacion = "https://tacbarber.onrender.com/resetear-password.html?token=" + token;
-
         mailer.send(
                 Mail.withText(
                         email,
@@ -142,6 +126,19 @@ public class AuthResource {
 
         return Response.ok().build();
     }
+
+    @Transactional
+    public void guardarTokenRecuperacion(Usuario usuario, String token) {
+        TokenRecuperacion tokenRecup = new TokenRecuperacion();
+        tokenRecup.usuario = usuario;
+        tokenRecup.token = token;
+        tokenRecup.fechaExpiracion = LocalDateTime.now().plusHours(1);
+        tokenRecup.usado = false;
+        tokenRecup.persist();
+    }
+
+
+
 
     // POST /auth/resetear-password
     @POST
