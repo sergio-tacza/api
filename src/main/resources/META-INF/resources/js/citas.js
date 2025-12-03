@@ -315,6 +315,7 @@ function renderCitas(citas, tbody) {
 
         // Acciones (confirmar / completar / cancelar / borrar)
         const tdAcciones = document.createElement('td');
+        tdAcciones.classList.add('actions-cell');
 
         const btnConfirmar = document.createElement('button');
         btnConfirmar.textContent = 'Confirmar';
@@ -326,7 +327,6 @@ function renderCitas(citas, tbody) {
         const btnCompletar = document.createElement('button');
         btnCompletar.textContent = 'Completar';
         btnCompletar.className = 'btn secondary';
-        btnCompletar.style.marginLeft = '4px';
         btnCompletar.addEventListener('click', async () => {
             await cambiarEstadoCita(cita.id, 'completar');
         });
@@ -334,18 +334,15 @@ function renderCitas(citas, tbody) {
         const btnCancelar = document.createElement('button');
         btnCancelar.textContent = 'Cancelar';
         btnCancelar.className = 'btn secondary';
-        btnCancelar.style.marginLeft = '4px';
         btnCancelar.addEventListener('click', async () => {
             await cambiarEstadoCita(cita.id, 'cancelar');
         });
 
-        // === ACCIONES SEGÚN ROL ===
-        // Por defecto añadimos siempre confirmar / completar / cancelar
+// === ACCIONES SEGÚN ROL ===
         tdAcciones.appendChild(btnConfirmar);
         tdAcciones.appendChild(btnCompletar);
         tdAcciones.appendChild(btnCancelar);
 
-        // Solo ADMIN o JEFE pueden borrar
         const rol = window.Roles ? window.Roles.rolActual : null;
         const puedeBorrar = rol === 'ADMIN' || rol === 'JEFE';
 
@@ -353,7 +350,6 @@ function renderCitas(citas, tbody) {
             const btnBorrar = document.createElement('button');
             btnBorrar.textContent = 'Borrar';
             btnBorrar.className = 'btn danger';
-            btnBorrar.style.marginLeft = '8px';
             btnBorrar.addEventListener('click', async () => {
                 const conf = confirm('¿Seguro que quieres borrar esta cita?');
                 if (!conf) return;
@@ -361,6 +357,8 @@ function renderCitas(citas, tbody) {
             });
             tdAcciones.appendChild(btnBorrar);
         }
+
+
 
         tr.appendChild(tdCliente);
         tr.appendChild(tdTelefono);

@@ -310,10 +310,58 @@ section h2 {
     gap: 24px;
     margin-top: 24px;
 }
+/* ==========================
+   TABLAS PRO (GLOBAL)
+   ========================== */
+.tb-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 18px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
 
-@media (max-width: 900px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
+.tb-table th,
+.tb-table td {
+    padding: 10px 14px;
+    font-size: 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.tb-table th {
+    text-align: left;
+    font-size: 18px;        /* un poco más grande */
+    font-weight: 700;       /* más negrita */
+    color: #111827;         /* más oscuro */
+    background: #f3f4f6;
+}
+
+
+.tb-table tbody tr:hover {
+    background: #f9fafb;
+}
+.tb-table td.actions-cell {
+    text-align: right;
+}
+
+.tb-table td.actions-cell .btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+.tb-table td.actions-cell .btn:last-child {
+    margin-bottom: 0;
+}
+
+
+
+@media (max-width: 1000px) {
+    .tb-table th, .tb-table td {
+        font-size: 13px;
+        padding: 9px 10px;
     }
 }
 
