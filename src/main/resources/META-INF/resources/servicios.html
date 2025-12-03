@@ -25,15 +25,19 @@
             <h1>Servicios</h1>
             <p class="subtitle">Catálogo de servicios</p>
         </div>
-
-        <button id="newServiceBtn" class="btn primary rol-admin">Nuevo servicio</button>
+        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+            <button id="newServiceBtn" class="btn primary rol-admin">
+                Nuevo servicio
+            </button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="filtroOrden" style="font-weight: 600; white-space: nowrap;">Ordenar por:</label>
+                <select id="filtroOrden" style="width: 150px;">
+                    <option value="az">A - Z</option>
+                    <option value="za">Z - A</option>
+                </select>
+            </div>
+        </div>
     </header>
-
-    <section style="margin-bottom: 16px;">
-        <p class="subtitle">
-            Aquí se gestionan los servicios internos: cortes, degradados, barba, packs, etc.
-        </p>
-    </section>
 
     <section>
         <table class="table tb-table">
@@ -42,7 +46,6 @@
                 <th>Nombre</th>
                 <th>Duración</th>
                 <th>Precio</th>
-                <th>Estado</th>
                 <th class="rol-admin">Acciones</th>
             </tr>
             </thead>
@@ -85,6 +88,6 @@
 
 <script src="js/sesion.js"></script>
 <script src="js/roles.js"></script>
-<script src="js/servicios.js"></script>
+<script src="js/servicios.js?v=3"></script>
 </body>
 </html>

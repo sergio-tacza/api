@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const selectCliente = document.getElementById('clienteId');
     const selectServicio = document.getElementById('servicioId');
-    const selectBarbero = document.getElementById('barberoId'); // ← NUEVO
+    const selectBarbero = document.getElementById('barberoId');
+    const filtroBarbero = document.getElementById('filtroBarbero');
     const inputFecha = document.getElementById('fecha');
     const inputHora = document.getElementById('hora');
     const inputNotas = document.getElementById('notas');
@@ -45,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const current = newAppointmentFormSection.style.display;
             if (!current || current === 'none') {
                 newAppointmentFormSection.style.display = 'block';
-                // ← NUEVO: Cargar barberos cuando se abre el formulario
                 cargarBarberos(selectBarbero);
             } else {
                 newAppointmentFormSection.style.display = 'none';
@@ -56,9 +56,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5) Cargar datos iniciales
     cargarClientes(selectCliente);
     cargarServicios(selectServicio);
-    cargarBarberos(selectBarbero); // ← NUEVO
-    // 🔹 Usamos el filtro si viene de calendario
-    cargarCitas(tbody, noDataMessage, fechaFiltro);
+    cargarBarberos(selectBarbero);
+    cargarBarberosEnFiltro(filtroBarbero);
+    cargarCitas(tbody, noDataMessage, fechaFiltro, null);
+
+    // Escuchar cambios en el filtro de barbero
+    if (filtroBarbero) {
+        filtroBarbero.addEventListener('change', () => {
+            console.log('🔍 FILTRO ACTIVADO');
+            const barberoId = filtroBarbero.value;
+            console.log('barberoId seleccionado:', barberoId);
+            cargarCitas(tbody, noDataMessage, null, barberoId);
+        });
+    }
+
 
     // 6) Envío del formulario "Nueva cita"
     if (newAppointmentForm) {
@@ -67,9 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const clienteId = selectCliente.value;
             const servicioId = selectServicio.value;
-            const barberoId = selectBarbero ? selectBarbero.value : null; // ← NUEVO
-            const fecha = inputFecha.value; // 2025-11-18
-            const hora = inputHora.value;   // 16:35
+            const barberoId = selectBarbero ? selectBarbero.value : null;
+            const fecha = inputFecha.value;
+            const hora = inputHora.value;
             const notas = inputNotas.value;
 
             if (!clienteId || !servicioId || !fecha || !hora) {
@@ -77,13 +88,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Formato que espera el backend: "2025-11-18T16:35:00"
             const fechaHoraInicio = `${fecha}T${hora}:00`;
 
             const nuevaCita = {
                 cliente:  { id: Number(clienteId) },
                 servicio: { id: Number(servicioId) },
-                barbero: barberoId ? { id: Number(barberoId) } : null, // ← NUEVO
+                barbero: barberoId ? { id: Number(barberoId) } : null,
                 fechaHoraInicio: fechaHoraInicio,
                 notas: notas
             };
@@ -105,12 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 newAppointmentForm.reset();
-                // Si venimos filtrando por fecha, la dejamos de nuevo puesta
                 if (fechaFiltro && inputFecha) {
                     inputFecha.value = fechaFiltro;
                 }
                 newAppointmentFormSection.style.display = 'none';
-                await cargarCitas(tbody, noDataMessage, fechaFiltro);
+                const barberoFiltrado = filtroBarbero ? filtroBarbero.value : null;
+                await cargarCitas(tbody, noDataMessage, fechaFiltro, barberoFiltrado);
             } catch (err) {
                 console.error('Error de red al crear la cita:', err);
                 alert('Error de conexión con el servidor.');
@@ -172,7 +182,6 @@ async function cargarServicios(selectServicio) {
     }
 }
 
-// ← NUEVO: Función para cargar barberos
 async function cargarBarberos(selectBarbero) {
     if (!selectBarbero) return;
 
@@ -197,22 +206,49 @@ async function cargarBarberos(selectBarbero) {
     }
 }
 
+async function cargarBarberosEnFiltro(filtroBarbero) {
+    if (!filtroBarbero) return;
+
+    try {
+        const res = await fetch('/empleados?soloActivos=true');
+        if (!res.ok) return;
+
+        const barberos = await res.json();
+        filtroBarbero.innerHTML = '<option value="">Todos los barberos</option>';
+
+        barberos.forEach(b => {
+            const opt = document.createElement('option');
+            opt.value = b.id;
+            opt.textContent = (b.nombre || '') + (b.apellidos ? (' ' + b.apellidos) : '');
+            filtroBarbero.appendChild(opt);
+        });
+    } catch (err) {
+        console.error('Error al cargar barberos para filtro', err);
+    }
+}
+
 
 // =======================
 //   CARGAR Y PINTAR CITAS
 // =======================
 
-async function cargarCitas(tbody, noDataMessage, fechaFiltro) {
+async function cargarCitas(tbody, noDataMessage, fechaFiltro, barberoId) {
     if (!tbody || !noDataMessage) return;
 
     tbody.innerHTML = '';
     noDataMessage.style.display = 'none';
 
     try {
-        // 🔹 Si tenemos filtro de fecha, llamamos a /citas?fecha=YYYY-MM-DD
         let url = '/citas';
+        const params = [];
         if (fechaFiltro) {
-            url += `?fecha=${encodeURIComponent(fechaFiltro)}`;
+            params.push(`fecha=${encodeURIComponent(fechaFiltro)}`);
+        }
+        if (barberoId) {
+            params.push(`barberoId=${encodeURIComponent(barberoId)}`);
+        }
+        if (params.length > 0) {
+            url += '?' + params.join('&');
         }
 
         const res = await fetch(url);
@@ -265,7 +301,7 @@ function renderCitas(citas, tbody) {
         const tdServicio = document.createElement('td');
         tdServicio.textContent = (cita.servicio && cita.servicio.nombre) ? cita.servicio.nombre : '-';
 
-        // ← NUEVO: Barbero
+        // Barbero
         const tdBarbero = document.createElement('td');
         let nombreBarbero = 'Sin asignar';
         if (cita.barbero && cita.barbero.nombre) {
@@ -338,7 +374,6 @@ function renderCitas(citas, tbody) {
             await cambiarEstadoCita(cita.id, 'cancelar');
         });
 
-// === ACCIONES SEGÚN ROL ===
         tdAcciones.appendChild(btnConfirmar);
         tdAcciones.appendChild(btnCompletar);
         tdAcciones.appendChild(btnCancelar);
@@ -358,12 +393,10 @@ function renderCitas(citas, tbody) {
             tdAcciones.appendChild(btnBorrar);
         }
 
-
-
         tr.appendChild(tdCliente);
         tr.appendChild(tdTelefono);
         tr.appendChild(tdServicio);
-        tr.appendChild(tdBarbero); // ← NUEVO: Columna barbero
+        tr.appendChild(tdBarbero);
         tr.appendChild(tdFecha);
         tr.appendChild(tdHora);
         tr.appendChild(tdEstado);
@@ -390,10 +423,13 @@ async function cambiarEstadoCita(id, accion) {
             alert('No se pudo cambiar el estado de la cita.');
             return;
         }
-        await cargarCitas(
-            document.getElementById('appointmentsTableBody'),
-            document.getElementById('noDataMessage')
-        );
+
+        const tbody = document.getElementById('appointmentsTableBody');
+        const noDataMessage = document.getElementById('noDataMessage');
+        const filtroBarbero = document.getElementById('filtroBarbero');
+        const barberoId = filtroBarbero ? filtroBarbero.value : null;
+
+        await cargarCitas(tbody, noDataMessage, null, barberoId);
     } catch (err) {
         console.error('Error de red al cambiar estado', err);
         alert('Error de conexión con el servidor.');
@@ -410,10 +446,13 @@ async function borrarCita(id) {
             alert('No se pudo borrar la cita.');
             return;
         }
-        await cargarCitas(
-            document.getElementById('appointmentsTableBody'),
-            document.getElementById('noDataMessage')
-        );
+
+        const tbody = document.getElementById('appointmentsTableBody');
+        const noDataMessage = document.getElementById('noDataMessage');
+        const filtroBarbero = document.getElementById('filtroBarbero');
+        const barberoId = filtroBarbero ? filtroBarbero.value : null;
+
+        await cargarCitas(tbody, noDataMessage, null, barberoId);
     } catch (err) {
         console.error('Error de red al borrar cita', err);
         alert('Error de conexión con el servidor.');
@@ -431,7 +470,6 @@ function abrirWhatsapp(cita) {
         return;
     }
 
-    // Normalizamos teléfono
     let tel = cita.cliente.telefono.toString().replace(/\D/g, '');
     if (!tel.startsWith('34')) {
         tel = '34' + tel;

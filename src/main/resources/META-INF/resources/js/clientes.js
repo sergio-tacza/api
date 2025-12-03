@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelClientEditBtn = document.getElementById('cancelClientEditBtn');
     const tbody = document.getElementById('clientsTableBody');
     const noDataMessage = document.getElementById('clientsNoDataMessage');
+    const filtroEstado = document.getElementById('filtroEstado');
+    const filtroOrden = document.getElementById('filtroOrden');
 
     const idInput = document.getElementById('clienteId');
     const nombreInput = document.getElementById('clienteNombre');
@@ -61,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             if (!cliente.nombre || !cliente.telefono || !cliente.email) {
-                alert('Nombre,teléfono y el email son obligatorios');
+                alert('Nombre, teléfono y el email son obligatorios');
                 return;
             }
 
@@ -73,7 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (ok) {
-                await cargarClientes(tbody, noDataMessage);
+                const estadoActual = filtroEstado ? filtroEstado.value : 'todos';
+                const ordenActual = filtroOrden ? filtroOrden.value : 'az';
+                await cargarClientes(tbody, noDataMessage, estadoActual, ordenActual);
                 clientFormSection.style.display = 'none';
                 limpiarFormularioCliente();
             } else {
@@ -83,7 +87,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Carga inicial
-    cargarClientes(tbody, noDataMessage);
+    cargarClientes(tbody, noDataMessage, 'todos', 'az');
+
+    // Escuchar cambios en el filtro de estado
+    if (filtroEstado) {
+        filtroEstado.addEventListener('change', () => {
+            const estado = filtroEstado.value;
+            const orden = filtroOrden ? filtroOrden.value : 'az';
+            cargarClientes(tbody, noDataMessage, estado, orden);
+        });
+    }
+
+    // Escuchar cambios en el filtro de orden
+    if (filtroOrden) {
+        filtroOrden.addEventListener('change', () => {
+            const estado = filtroEstado ? filtroEstado.value : 'todos';
+            const orden = filtroOrden.value;
+            cargarClientes(tbody, noDataMessage, estado, orden);
+        });
+    }
 });
 
 
@@ -91,14 +113,13 @@ document.addEventListener('DOMContentLoaded', () => {
 // Funciones de API
 // =======================
 
-async function cargarClientes(tbody, noDataMessage) {
+async function cargarClientes(tbody, noDataMessage, estado = 'todos', orden = 'az') {
     if (!tbody || !noDataMessage) return;
 
     tbody.innerHTML = '';
     noDataMessage.style.display = 'none';
 
     try {
-        // Si quieres solo activos, pon ?soloActivos=true
         const response = await fetch('/clientes?soloActivos=false');
         if (!response.ok) {
             noDataMessage.textContent = 'No se han podido cargar los clientes.';
@@ -113,7 +134,7 @@ async function cargarClientes(tbody, noDataMessage) {
             return;
         }
 
-        renderClientes(clientes, tbody);
+        renderClientes(clientes, tbody, estado, orden);
 
     } catch (err) {
         console.error('Error al cargar /clientes', err);
@@ -185,10 +206,39 @@ async function borrarCliente(id) {
 // Renderizado tabla
 // =======================
 
-function renderClientes(clientes, tbody) {
+function renderClientes(clientes, tbody, estado = 'todos', orden = 'az') {
     tbody.innerHTML = '';
 
-    clientes.forEach(cliente => {
+    // Filtrar clientes según el estado
+    let clientesFiltrados = clientes;
+    if (estado === 'activos') {
+        clientesFiltrados = clientes.filter(c => c.activo !== false);
+    } else if (estado === 'inactivos') {
+        clientesFiltrados = clientes.filter(c => c.activo === false);
+    }
+
+    // Ordenar según el filtro
+    clientesFiltrados.sort((a, b) => {
+        const nombreA = ((a.nombre || '') + ' ' + (a.apellidos || '')).toLowerCase();
+        const nombreB = ((b.nombre || '') + ' ' + (b.apellidos || '')).toLowerCase();
+
+        if (orden === 'az') {
+            return nombreA.localeCompare(nombreB);
+        } else {
+            return nombreB.localeCompare(nombreA);
+        }
+    });
+
+    if (clientesFiltrados.length === 0) {
+        const noDataMessage = document.getElementById('clientsNoDataMessage');
+        if (noDataMessage) {
+            noDataMessage.textContent = `No hay clientes ${estado === 'activos' ? 'activos' : estado === 'inactivos' ? 'inactivos' : ''}.`;
+            noDataMessage.style.display = 'block';
+        }
+        return;
+    }
+
+    clientesFiltrados.forEach(cliente => {
         const tr = document.createElement('tr');
 
         const nombreCompleto =
@@ -208,10 +258,15 @@ function renderClientes(clientes, tbody) {
         tdNotas.textContent = cliente.notas || '-';
 
         const tdEstado = document.createElement('td');
-        tdEstado.textContent = cliente.activo === false ? 'INACTIVO' : 'ACTIVO';
+        const spanEstado = document.createElement('span');
+        spanEstado.className = `estado ${cliente.activo === false ? 'cancelada' : 'confirmada'}`;
+        spanEstado.textContent = cliente.activo === false ? 'INACTIVO' : 'ACTIVO';
+        tdEstado.appendChild(spanEstado);
+
 
         // Acciones
         const tdAcciones = document.createElement('td');
+        tdAcciones.classList.add('actions-cell');
 
         const btnEditar = document.createElement('button');
         btnEditar.textContent = 'Editar';
@@ -228,8 +283,7 @@ function renderClientes(clientes, tbody) {
         if (esAdminOJefe) {
             const btnDesactivar = document.createElement('button');
             btnDesactivar.textContent = cliente.activo ? 'Desactivar' : 'Activar';
-            btnDesactivar.className = 'btn secondary';
-            btnDesactivar.style.marginLeft = '4px';
+            btnDesactivar.className = cliente.activo ? 'btn danger' : 'btn primary';
             btnDesactivar.addEventListener('click', async () => {
                 const conf = confirm(`¿Seguro que quieres ${cliente.activo ? 'desactivar' : 'activar'} este cliente?`);
                 if (!conf) return;
@@ -237,10 +291,13 @@ function renderClientes(clientes, tbody) {
                 const ok = await cambiarEstadoCliente(cliente.id, !cliente.activo);
 
                 if (ok) {
-                    // Recargar la tabla
                     const tbodyElement = document.getElementById('clientsTableBody');
                     const noDataElement = document.getElementById('clientsNoDataMessage');
-                    await cargarClientes(tbodyElement, noDataElement);
+                    const filtroEstado = document.getElementById('filtroEstado');
+                    const filtroOrden = document.getElementById('filtroOrden');
+                    const estadoActual = filtroEstado ? filtroEstado.value : 'todos';
+                    const ordenActual = filtroOrden ? filtroOrden.value : 'az';
+                    await cargarClientes(tbodyElement, noDataElement, estadoActual, ordenActual);
                 } else {
                     alert('Error al cambiar estado del cliente');
                 }

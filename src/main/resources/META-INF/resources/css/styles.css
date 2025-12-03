@@ -220,10 +220,12 @@ section h2 {
    ESTADOS DE CITA
    ========================== */
 .estado {
-    padding: 6px 14px;
-    border-radius: 999px;
-    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
     font-weight: 600;
+    text-transform: uppercase;
+    display: inline-block;
 }
 
 .estado.pendiente { background: #fde047; color: #6b5000; }

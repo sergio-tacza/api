@@ -24,7 +24,18 @@
             <h1>Empleados</h1>
             <p class="subtitle">Gestión del equipo de empleados</p>
         </div>
-        <button id="newEmployeeBtn" class="btn primary rol-admin rol-jefe">Nuevo empleado</button>
+        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+            <button id="newEmployeeBtn" class="btn primary rol-admin rol-jefe">
+                Nuevo empleado
+            </button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="filtroOrden" style="font-weight: 600; white-space: nowrap;">Ordenar por:</label>
+                <select id="filtroOrden" style="width: 150px;">
+                    <option value="az">A - Z</option>
+                    <option value="za">Z - A</option>
+                </select>
+            </div>
+        </div>
     </header>
 
     <!-- TABLA DE EMPLEADOS -->
@@ -87,8 +98,6 @@
                 </select>
             </div>
 
-
-
             <button type="submit" class="btn primary">Guardar</button>
             <button type="button" id="cancelEmployeeEditBtn" class="btn secondary">Cancelar</button>
         </form>
@@ -97,6 +106,6 @@
 
 <script src="js/sesion.js"></script>
 <script src="js/roles.js"></script>
-<script src="js/empleados.js"></script>
+<script src="js/empleados.js?v=3"></script>
 </body>
 </html>

@@ -26,10 +26,29 @@
             <h1>Clientes</h1>
             <p class="subtitle">Gestión de la base de clientes</p>
         </div>
-
-        <button id="newClientBtn" class="btn primary">Nuevo cliente</button>
+        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+            <button id="newClientBtn" class="btn primary">
+                Nuevo cliente
+            </button>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <label for="filtroOrden" style="font-weight: 600; white-space: nowrap;">Ordenar por:</label>
+                    <select id="filtroOrden" style="width: 150px;">
+                        <option value="az">A - Z</option>
+                        <option value="za">Z - A</option>
+                    </select>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <label for="filtroEstado" style="font-weight: 600; white-space: nowrap;">Filtrar por estado:</label>
+                    <select id="filtroEstado" style="width: 150px;">
+                        <option value="todos">Todos</option>
+                        <option value="activos">Activos</option>
+                        <option value="inactivos">Inactivos</option>
+                    </select>
+                </div>
+            </div>
+        </div>
     </header>
-
     <!-- TABLA DE CLIENTES -->
     <table class="table tb-table">
         <thead>
@@ -91,6 +110,6 @@
 <!-- version para forzar recarga del JS -->
 <script src="js/sesion.js"></script>
 <script src="js/roles.js"></script>
-<script src="js/clientes.js?v=2"></script>
+<script src="js/clientes.js?v=3"></script>
 </body>
 </html>

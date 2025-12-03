@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Comprobar login
 
-
     const logoutBtn = document.getElementById('logoutBtn');
     const newServiceBtn = document.getElementById('newServiceBtn');
     const serviceFormSection = document.getElementById('serviceFormSection');
@@ -10,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelEditBtn = document.getElementById('cancelServiceEditBtn');
     const tbody = document.getElementById('servicesTableBody');
     const noDataMessage = document.getElementById('servicesNoDataMessage');
+    const filtroOrden = document.getElementById('filtroOrden');
 
     const idInput = document.getElementById('servicioId');
     const nombreInput = document.getElementById('servicioNombre');
@@ -70,7 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (ok) {
-                await cargarServicios(tbody, noDataMessage);
+                const ordenActual = filtroOrden ? filtroOrden.value : 'az';
+                await cargarServicios(tbody, noDataMessage, ordenActual);
                 serviceFormSection.style.display = 'none';
                 limpiarFormularioServicio();
             } else {
@@ -80,21 +81,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Carga inicial de la tabla
-    cargarServicios(tbody, noDataMessage);
+    cargarServicios(tbody, noDataMessage, 'az');
+
+    // Escuchar cambios en el filtro de orden
+    if (filtroOrden) {
+        filtroOrden.addEventListener('change', () => {
+            const orden = filtroOrden.value;
+            cargarServicios(tbody, noDataMessage, orden);
+        });
+    }
 });
 
 // =======================
 // Funciones de API
 // =======================
 
-async function cargarServicios(tbody, noDataMessage) {
+async function cargarServicios(tbody, noDataMessage, orden = 'az') {
     if (!tbody || !noDataMessage) return;
 
     tbody.innerHTML = '';
     noDataMessage.style.display = 'none';
 
     try {
-        const response = await fetch('/servicios');
+        const response = await fetch('/servicios?soloActivos=false');
         if (!response.ok) {
             noDataMessage.textContent = 'No se han podido cargar los servicios.';
             noDataMessage.style.display = 'block';
@@ -108,7 +117,7 @@ async function cargarServicios(tbody, noDataMessage) {
             return;
         }
 
-        renderServicios(servicios, tbody);
+        renderServicios(servicios, tbody, orden);
 
     } catch (err) {
         console.error('Error al cargar /servicios', err);
@@ -149,18 +158,6 @@ async function actualizarServicio(id, servicio) {
     }
 }
 
-async function desactivarServicio(id) {
-    try {
-        const response = await fetch(`/servicios/${id}/desactivar`, {
-            method: 'PUT'
-        });
-        return response.ok;
-    } catch (err) {
-        console.error('Error al desactivar servicio', err);
-        return false;
-    }
-}
-
 async function borrarServicio(id) {
     try {
         const response = await fetch(`/servicios/${id}`, {
@@ -177,8 +174,29 @@ async function borrarServicio(id) {
 // Renderizado tabla
 // =======================
 
-function renderServicios(servicios, tbody) {
+function renderServicios(servicios, tbody, orden = 'az') {
     tbody.innerHTML = '';
+
+    // Ordenar según el filtro
+    servicios.sort((a, b) => {
+        const nombreA = (a.nombre || '').toLowerCase();
+        const nombreB = (b.nombre || '').toLowerCase();
+
+        if (orden === 'az') {
+            return nombreA.localeCompare(nombreB);
+        } else {
+            return nombreB.localeCompare(nombreA);
+        }
+    });
+
+    if (servicios.length === 0) {
+        const noDataMessage = document.getElementById('servicesNoDataMessage');
+        if (noDataMessage) {
+            noDataMessage.textContent = 'No hay servicios registrados.';
+            noDataMessage.style.display = 'block';
+        }
+        return;
+    }
 
     servicios.forEach(servicio => {
         const tr = document.createElement('tr');
@@ -194,16 +212,13 @@ function renderServicios(servicios, tbody) {
         tdPrecio.textContent =
             servicio.precio != null ? Number(servicio.precio).toFixed(2) + ' €' : '-';
 
-        const tdEstado = document.createElement('td');
-        tdEstado.textContent = servicio.activo === false ? 'INACTIVO' : 'ACTIVO';
-
         const tdAcciones = document.createElement('td');
+        tdAcciones.classList.add('actions-cell');
 
-        // Botón editar (lo dejamos para todos de momento)
+        // Botón editar
         const btnEditar = document.createElement('button');
         btnEditar.textContent = 'Editar';
         btnEditar.className = 'btn secondary';
-        btnEditar.style.marginRight = '4px';
         btnEditar.addEventListener('click', () => {
             abrirFormularioEditarServicio(servicio);
         });
@@ -213,28 +228,28 @@ function renderServicios(servicios, tbody) {
         const esAdminOJefe = rol === 'ADMIN' || rol === 'JEFE';
 
         if (esAdminOJefe) {
-            // Solo ADMIN/JEFE pueden activar/desactivar
-            const btnToggle = document.createElement('button');
-            btnToggle.textContent = servicio.activo ? 'Desactivar' : 'Activar';
-            btnToggle.className = 'btn secondary';
-            btnToggle.addEventListener('click', async () => {
-                const nuevoEstadoActivo = !servicio.activo;
-                const ok = await cambiarEstadoServicio(servicio.id, nuevoEstadoActivo);
+            const btnEliminar = document.createElement('button');
+            btnEliminar.textContent = 'Eliminar';
+            btnEliminar.className = 'btn danger';
+            btnEliminar.addEventListener('click', async () => {
+                const conf = confirm('¿Seguro que quieres eliminar este servicio?');
+                if (!conf) return;
+
+                const ok = await borrarServicio(servicio.id);
                 if (ok) {
-                    cargarServicios(tbody, document.getElementById('servicesNoDataMessage'));
+                    const filtroOrden = document.getElementById('filtroOrden');
+                    const ordenActual = filtroOrden ? filtroOrden.value : 'az';
+                    cargarServicios(tbody, document.getElementById('servicesNoDataMessage'), ordenActual);
                 } else {
-                    alert('Error al cambiar el estado del servicio');
+                    alert('Error al eliminar el servicio');
                 }
             });
-            tdAcciones.appendChild(btnToggle);
+            tdAcciones.appendChild(btnEliminar);
         }
-
-        tr.appendChild(tdAcciones);
 
         tr.appendChild(tdNombre);
         tr.appendChild(tdDuracion);
         tr.appendChild(tdPrecio);
-        tr.appendChild(tdEstado);
         tr.appendChild(tdAcciones);
 
         tbody.appendChild(tr);

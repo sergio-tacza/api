@@ -22,9 +22,17 @@
             <h1>Agenda</h1>
             <p class="subtitle">Gestiona las citas y envía recordatorios por WhatsApp</p>
         </div>
-        <button id="newAppointmentBtn" class="btn primary">
-            Nueva cita
-        </button>
+        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+            <button id="newAppointmentBtn" class="btn primary">
+                Nueva cita
+            </button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="filtroBarbero" style="font-weight: 600; white-space: nowrap;">Filtrar por empleado:</label>
+                <select id="filtroBarbero" style="width: 200px;">
+                    <option value="">Todos los empleados</option>
+                </select>
+            </div>
+        </div>
     </header>
     <section>
         <table class="table tb-table">
@@ -33,7 +41,7 @@
                 <th>Cliente</th>
                 <th>Teléfono</th>
                 <th>Servicio</th>
-                <th>Barbero</th>
+                <th>Empleado</th>
                 <th class="fecha">Fecha</th>
                 <th>Hora</th>
                 <th>Estado</th>
@@ -64,7 +72,7 @@
 
             <!-- Selector de barbero -->
             <div class="form-group">
-                <label for="barberoId">Barbero (opcional)</label>
+                <label for="barberoId">Empleado (opcional)</label>
                 <select id="barberoId">
                     <option value="">Sin asignar</option>
                     <!-- Se rellena dinámicamente con JS -->
@@ -90,6 +98,6 @@
 </div>
 <script src="js/sesion.js"></script>
 <script src="js/roles.js"></script>
-<script src="js/citas.js"></script>
+<script src="js/citas.js?v=3"></script>
 </body>
 </html>

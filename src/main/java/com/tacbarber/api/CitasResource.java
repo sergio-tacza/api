@@ -20,10 +20,26 @@ import java.util.List;
 public class CitasResource {
 
     // ==========================
-    // LISTAR CITAS (con filtro de fecha opcional)
-    // ==========================
+// LISTAR CITAS (con filtro de fecha y barbero opcionales)
+// ==========================
     @GET
-    public List<Cita> listar(@QueryParam("fecha") String fecha) {
+    public List<Cita> listar(
+            @QueryParam("fecha") String fecha,
+            @QueryParam("barberoId") Long barberoId) {
+
+        // Filtro por fecha Y barbero
+        if (fecha != null && !fecha.isBlank() && barberoId != null) {
+            LocalDate day = LocalDate.parse(fecha);
+            LocalDateTime inicio = day.atStartOfDay();
+            LocalDateTime fin = day.atTime(LocalTime.MAX);
+
+            return Cita.list(
+                    "fechaHoraInicio BETWEEN ?1 AND ?2 AND barbero.id = ?3 ORDER BY fechaHoraInicio",
+                    inicio, fin, barberoId
+            );
+        }
+
+        // Solo filtro por fecha
         if (fecha != null && !fecha.isBlank()) {
             LocalDate day = LocalDate.parse(fecha);
             LocalDateTime inicio = day.atStartOfDay();
@@ -35,8 +51,18 @@ public class CitasResource {
             );
         }
 
+        // Solo filtro por barbero
+        if (barberoId != null) {
+            return Cita.list(
+                    "barbero.id = ?1 ORDER BY fechaHoraInicio",
+                    barberoId
+            );
+        }
+
+        // Sin filtros
         return Cita.list("ORDER BY fechaHoraInicio");
     }
+
 
     // ==========================
     // OBTENER CITA POR ID
