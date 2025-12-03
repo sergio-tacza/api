@@ -309,8 +309,9 @@ function renderClientes(clientes, tbody, estado = 'todos', orden = 'az') {
         tr.appendChild(tdTelefono);
         tr.appendChild(tdEmail);
         tr.appendChild(tdNotas);
-        tr.appendChild(tdAcciones);
         tr.appendChild(tdEstado);
+        tr.appendChild(tdAcciones);
+
 
         tbody.appendChild(tr);
     });
