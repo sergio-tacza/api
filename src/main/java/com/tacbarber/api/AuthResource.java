@@ -99,7 +99,7 @@ public class AuthResource {
 
         // Buscar usuario por email
         System.out.println("🔍 Buscando email: [" + email + "]");
-        Usuario usuario = Usuario.find("email", email).firstResult();
+        Usuario usuario = Usuario.find("LOWER(email) = LOWER(?1)", email.trim()).firstResult();
 
         if (usuario == null) {
             System.out.println("No se encontró usuario con ese email");
