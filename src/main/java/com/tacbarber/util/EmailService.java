@@ -12,14 +12,15 @@ import java.io.IOException;
 @ApplicationScoped
 public class EmailService {
 
-    @ConfigProperty(name = "quarkus.sendgrid.api.key")
+    @ConfigProperty(name = "sendgrid.api.key")
     String sendGridApiKey;
 
-    @ConfigProperty(name = "quarkus.sendgrid.from.email")
+    @ConfigProperty(name = "sendgrid.from.email")
     String fromEmail;
 
-    @ConfigProperty(name = "quarkus.sendgrid.from.name")
+    @ConfigProperty(name = "sendgrid.from.name")
     String fromName;
+
     public void enviarEmail(String destinatario, String asunto, String contenido) throws IOException {
         Email from = new Email(fromEmail, fromName);
         Email to = new Email(destinatario);
