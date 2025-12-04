@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Comprobar login
-
     const logoutBtn = document.getElementById('logoutBtn');
     const newServiceBtn = document.getElementById('newServiceBtn');
     const serviceFormSection = document.getElementById('serviceFormSection');

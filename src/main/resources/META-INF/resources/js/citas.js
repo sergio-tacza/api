@@ -1,6 +1,4 @@
-// js/citas.js
-
-let barberos = []; // ← NUEVO: Para almacenar la lista de barberos
+let barberos = []; //Para almacenar la lista de barberos
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1) Comprobamos login

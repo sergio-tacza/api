@@ -113,7 +113,7 @@ public class ServiciosResource {
         return s;
     }
 
-    // ⭐ NUEVO: PUT /servicios/{id}/activar
+    //PUT /servicios/{id}/activar
     @PUT
     @Path("/{id}/activar")
     @Transactional

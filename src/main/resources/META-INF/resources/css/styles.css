@@ -1,6 +1,7 @@
 /* ==========================
    PALETA / VARIABLES
    ========================== */
+/* Definición de variables CSS globales para colores, radios y sombras reutilizables en toda la app */
 :root {
     --color-bg: #f3f4f6;
     --color-card: #ffffff;
@@ -16,6 +17,7 @@
 /* ==========================
    BASE
    ========================== */
+/* Estilos base de la página: tipografía, fondo y reset de márgenes */
 body {
     margin: 0;
     padding: 0;
@@ -25,6 +27,7 @@ body {
     font-size: 17px;
 }
 
+/* Aplicar box-sizing global para que padding y borde cuenten en el ancho/alto */
 * {
     box-sizing: border-box;
 }
@@ -32,6 +35,7 @@ body {
 /* ==========================
    MENÚ SUPERIOR
    ========================== */
+/* Barra superior fija con las opciones principales de navegación y botón de logout */
 .top-menu {
     position: fixed;
     top: 0;
@@ -48,6 +52,7 @@ body {
     z-index: 100;
 }
 
+/* Estilos de los enlaces del menú superior */
 .top-menu a.menu-item {
     color: var(--color-text-main);
     text-decoration: none;
@@ -57,15 +62,18 @@ body {
     transition: color 0.15s;
 }
 
+/* Cambio de color al pasar el ratón por encima de un ítem del menú */
 .top-menu a.menu-item:hover {
     color: var(--color-primary);
 }
 
+/* Estado activo del ítem de menú (sección actual) */
 .top-menu a.menu-item.active {
     color: var(--color-primary);
     font-weight: 700;
 }
 
+/* Botón de cerrar sesión situado a la derecha del menú */
 .logout-btn {
     margin-left: auto;
     padding: 9px 18px;
@@ -81,6 +89,7 @@ body {
 /* ==========================
    CONTENEDOR PRINCIPAL
    ========================== */
+/* Contenedor central donde se muestra el contenido de cada pantalla (citas, clientes, etc.) */
 .container {
     max-width: 1300px;
     margin: 90px auto 40px auto;
@@ -94,6 +103,7 @@ body {
 /* ==========================
    TITULOS
    ========================== */
+/* Título principal de cada pantalla */
 .header h1 {
     margin: 0 0 16px 0;
     font-size: 42px;
@@ -102,6 +112,7 @@ body {
     letter-spacing: 2px;
 }
 
+/* Subtítulo o descripción debajo del h1 */
 .subtitle {
     font-size: 18px;
     color: var(--color-text-muted);
@@ -111,6 +122,7 @@ body {
 /* ==========================
    BOTONES
    ========================== */
+/* Estilo base para todos los botones redondeados */
 .btn {
     padding: 11px 20px;
     border-radius: 999px;
@@ -120,21 +132,25 @@ body {
     font-weight: 600;
 }
 
+/* Botón principal (acciones importantes) */
 .btn.primary {
     background: var(--color-primary);
     color: var(--color-card);
     box-shadow: 0 4px 10px rgba(217, 164, 65, 0.25);
 }
 
+/* Hover para botón principal: tono más oscuro */
 .btn.primary:hover {
     background: var(--color-primary-dark);
 }
 
+/* Botón secundario (acciones menos prioritarias) */
 .btn.secondary {
     background: #e5e7eb;
     color: var(--color-text-main);
 }
 
+/* Botón para acciones peligrosas (eliminar, etc.) */
 .btn.danger {
     background: #ef4444;
     color: white;
@@ -143,10 +159,12 @@ body {
 /* ==========================
    FORMULARIOS
    ========================== */
+/* Agrupación de campos de formulario con separación vertical */
 .form-group {
     margin-bottom: 18px;
 }
 
+/* Etiquetas de campos de formulario */
 label {
     font-size: 17px;
     margin-bottom: 8px;
@@ -154,6 +172,7 @@ label {
     font-weight: 500;
 }
 
+/* Inputs y selects uniformes en toda la app */
 input, select {
     width: 100%;
     padding: 12px 14px;
@@ -165,6 +184,7 @@ input, select {
     transition: 0.15s;
 }
 
+/* Estilo al enfocar un input/select (resalta con el color principal) */
 input:focus, select:focus {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 1px rgba(217, 164, 65, 0.4);
@@ -174,6 +194,7 @@ input:focus, select:focus {
 /* ==========================
    TABLAS
    ========================== */
+/* Tabla principal reutilizada para listados (citas, clientes, etc.) */
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -184,6 +205,7 @@ input:focus, select:focus {
     box-shadow: var(--shadow-card);
 }
 
+/* Cabecera de la tabla: estilos de las celdas th */
 .table th {
     background: #fafafa;
     text-align: left;
@@ -193,22 +215,25 @@ input:focus, select:focus {
     white-space: nowrap;
 }
 
+/* Celdas de datos de la tabla */
 .table td {
     padding: 14px 16px;
     border-bottom: 1px solid var(--color-border-soft);
     font-size: 16px;
 }
 
+/* Columna de fecha con anchura mínima y centrada */
 .table th.fecha, .table td.fecha {
     min-width: 130px;
     text-align: center;
 }
 
+/* Efecto hover en filas de tabla para mejorar legibilidad */
 .table tr:hover {
     background: #f9fafb;
 }
 
-/* Títulos de sección */
+/* Títulos h2 dentro de secciones del contenido principal */
 section h2 {
     font-size: 26px;
     margin-bottom: 16px;
@@ -219,6 +244,7 @@ section h2 {
 /* ==========================
    ESTADOS DE CITA
    ========================== */
+/* Etiqueta visual para estado de una cita (badge) */
 .estado {
     padding: 4px 12px;
     border-radius: 12px;
@@ -228,14 +254,16 @@ section h2 {
     display: inline-block;
 }
 
+/* Colores específicos para cada estado de cita */
 .estado.pendiente { background: #fde047; color: #6b5000; }
 .estado.confirmada { background: #22c55e; color: white; }
 .estado.completada { background: #0ea5e9; color: white; }
-.estado.cancelada { background: #ef4444; color: white; }
+.estado.cancelada  { background: #ef4444; color: white; }
 
 /* ==========================
    CALENDARIO
    ========================== */
+/* Contenedor del calendario en el dashboard o vista de agenda */
 .calendar-section {
     background: white;
     border-radius: 14px;
@@ -243,6 +271,7 @@ section h2 {
     box-shadow: var(--shadow-card);
 }
 
+/* Estilos de cada día del calendario */
 .calendar-day {
     background: white;
     border: 1px solid #e5e7eb;
@@ -251,11 +280,13 @@ section h2 {
     min-height: 60px;
 }
 
+/* Estilo especial para el día actual en el calendario */
 .calendar-day.today {
     border-color: var(--color-primary);
     background: #fff7e6;
 }
 
+/* Días que tienen eventos/citas marcados visualmente */
 .calendar-day.has-events {
     border-color: var(--color-primary);
 }
@@ -263,6 +294,7 @@ section h2 {
 /* ==========================
    BOTÓN WHATSAPP
    ========================== */
+/* Botón de acción para enviar WhatsApp desde la interfaz */
 .whatsapp-btn {
     background: #25D366;
     color: white;
@@ -274,6 +306,7 @@ section h2 {
 /* ==========================
    DASHBOARD: TARJETAS RESUMEN
    ========================== */
+/* Grid de tarjetas con métricas/resumen (nº citas, clientes, etc.) */
 .dashboard-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -281,6 +314,7 @@ section h2 {
     margin-bottom: 24px;
 }
 
+/* Tarjeta individual del dashboard con datos numéricos */
 .dash-card {
     background: var(--color-card);
     border-radius: 12px;
@@ -292,11 +326,13 @@ section h2 {
     gap: 6px;
 }
 
+/* Etiqueta pequeña descriptiva dentro de la tarjeta */
 .dash-label {
     font-size: 13px;
     color: var(--color-text-muted);
 }
 
+/* Valor principal resaltado de la tarjeta (nº de citas, etc.) */
 .dash-value {
     font-size: 20px;
     font-weight: 600;
@@ -306,15 +342,18 @@ section h2 {
 /* ==========================
    DASHBOARD: LAYOUT CALENDARIO + TABLAS
    ========================== */
+/* Distribución en columnas del calendario y las tablas en el dashboard */
 .dashboard-grid {
     display: grid;
     grid-template-columns: 2fr 3fr;
     gap: 24px;
     margin-top: 24px;
 }
+
 /* ==========================
    TABLAS PRO (GLOBAL)
    ========================== */
+/* Versión de tabla más “pro” con bordes definidos, usada en listados principales */
 .tb-table {
     width: 100%;
     border-collapse: collapse;
@@ -325,6 +364,7 @@ section h2 {
     border: 1px solid #ddd;
 }
 
+/* Celdas genéricas de la tabla pro */
 .tb-table th,
 .tb-table td {
     padding: 10px 14px;
@@ -332,6 +372,7 @@ section h2 {
     border-bottom: 1px solid #e5e7eb;
 }
 
+/* Cabecera de la tabla pro, más marcada visualmente */
 .tb-table th {
     text-align: left;
     font-size: 18px;        /* un poco más grande */
@@ -340,26 +381,29 @@ section h2 {
     background: #f3f4f6;
 }
 
-
+/* Efecto hover en filas del cuerpo de la tabla pro */
 .tb-table tbody tr:hover {
     background: #f9fafb;
 }
+
+/* Celda de acciones alineada a la derecha (botones de editar, eliminar, etc.) */
 .tb-table td.actions-cell {
     text-align: right;
 }
 
+/* Los botones dentro de la celda de acciones se muestran en columna y ocupan todo el ancho */
 .tb-table td.actions-cell .btn {
     display: block;
     width: 100%;
     margin-bottom: 6px;
 }
 
+/* Quitar margen extra al último botón de la celda de acciones */
 .tb-table td.actions-cell .btn:last-child {
     margin-bottom: 0;
 }
 
-
-
+/* Ajustes de tipografía y paddings de la tabla pro en pantallas más pequeñas */
 @media (max-width: 1000px) {
     .tb-table th, .tb-table td {
         font-size: 13px;
@@ -367,6 +411,7 @@ section h2 {
     }
 }
 
+/* Bloque contenedor del calendario dentro del dashboard, en formato columna */
 .dashboard-calendar-block {
     display: flex;
     flex-direction: column;
@@ -376,6 +421,7 @@ section h2 {
 /* ==========================
    TABLAS PEQUEÑAS DEL DASHBOARD
    ========================== */
+/* Tablas compactas usadas para listados pequeños en el dashboard */
 .small-table {
     width: 100%;
     border-collapse: collapse;
@@ -386,6 +432,7 @@ section h2 {
     font-size: 13px;
 }
 
+/* Cabecera de las tablas pequeñas */
 .small-table th {
     background: #fafafa;
     text-align: left;
@@ -393,15 +440,18 @@ section h2 {
     border-bottom: 1px solid var(--color-border-soft);
 }
 
+/* Celdas de datos de las tablas pequeñas */
 .small-table td {
     padding: 10px 12px;
     border-bottom: 1px solid var(--color-border-soft);
 }
 
+/* Hover en filas de tabla pequeña */
 .small-table tr:hover {
     background: #f9fafb;
 }
 
+/* Título de sección para bloques dentro del dashboard (sobre tablas pequeñas, etc.) */
 .section-title {
     font-size: 16px;
     font-weight: 600;
@@ -412,12 +462,14 @@ section h2 {
 /* =========================================
    ESTILOS PANTALLA DE LOGIN (index.html)
    ========================================= */
+/* Estilos específicos para el body de la pantalla de login */
 .login-body {
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background: var(--color-bg);
 }
 
+/* Contenedor centrado vertical y horizontalmente para la tarjeta de login */
 .login-wrapper {
     min-height: 100vh;
     display: flex;
@@ -426,6 +478,7 @@ section h2 {
     padding: 16px;
 }
 
+/* Tarjeta principal de login (fondo blanco, sombra, bordes redondeados) */
 .login-card {
     background: #ffffff;
     border-radius: var(--radius-card);
@@ -435,12 +488,14 @@ section h2 {
     max-width: 380px;
 }
 
+/* Cabecera de la tarjeta de login (por ejemplo, para el logo) */
 .login-card-header {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 12px;
 }
 
+/* Versión textual del logo en la pantalla de login */
 .login-logo {
     font-size: 26px;
     font-weight: 600;
@@ -448,21 +503,25 @@ section h2 {
     letter-spacing: 1px;
 }
 
+/* Título principal del formulario de login (ej: “Iniciar sesión”) */
 .login-title {
     margin: 0 0 20px;
     font-size: 24px;
     color: var(--color-text-main);
 }
 
+/* Separación entre campos dentro del formulario de login */
 .login-form .form-group {
     margin-bottom: 16px;
 }
 
+/* Etiquetas específicas del formulario de login, algo más pequeñas y con color tenue */
 .login-form label {
     font-size: 13px;
     color: var(--color-text-muted);
 }
 
+/* Inputs de texto/contraseña del login con fondo ligeramente gris */
 .login-form input[type="text"],
 .login-form input[type="password"] {
     width: 100%;
@@ -473,15 +532,18 @@ section h2 {
     color: var(--color-text-main);
 }
 
+/* Hover para un botón con clase .btn-primary (en pantallas como login) */
 .btn-primary:hover {
     background: var(--color-primary-dark);
     transform: translateY(-1px);
 }
 
+/* Botón que ocupa el 100% del ancho disponible */
 .btn-full {
     width: 100%;
 }
 
+/* Mensaje de error genérico (login fallido, etc.) */
 .error-message {
     margin-top: 12px;
     font-size: 13px;
@@ -489,7 +551,7 @@ section h2 {
     text-align: center;
 }
 
-/* Responsive */
+/* Responsive general para pantallas pequeñas (móviles/tablets) */
 @media (max-width: 1000px) {
     .container {
         padding: 20px 12px;
@@ -503,6 +565,8 @@ section h2 {
     .btn { font-size: 14px; padding: 8px 14px;}
     .top-menu a.menu-item { font-size: 16px;}
 }
+
+/* Logo como imagen en la pantalla de login (en lugar de solo texto) */
 .login-logo-img {
     height: 60px;
     width: auto;

@@ -1,4 +1,3 @@
-// js/sesion.js
 document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname;
     const file = path.split('/').pop() || 'index.html';

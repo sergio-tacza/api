@@ -1,4 +1,3 @@
-// js/login.js
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
     const errorMsg = document.getElementById('loginError');
